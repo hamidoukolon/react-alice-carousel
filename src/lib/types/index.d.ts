@@ -160,6 +160,12 @@ export interface Props {
    */
   autoHeight?: boolean
   /**
+   * Set auto width for the item
+   *
+   * Default: false.
+   */
+  autoWidth?: boolean
+  /**
    * Preserve current slide position when resize event fired
    *
    * Default: false.

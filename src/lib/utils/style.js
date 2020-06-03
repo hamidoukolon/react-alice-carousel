@@ -6,9 +6,10 @@ export const getIntermediateTransitionProps = (condition, duration, transitionTi
     : { style: { transition: `transform ${duration}ms ${transitionTimingFunction}` } }
 }
 
-export const itemStyles = (i, state, animationProps) => {
+export const itemStyles = (i, state, animationProps, item) => {
   const { fadeOutOffset = 0 } = animationProps || {}
   const { itemWidth = 0, duration = 0 } = state || {}
+  //  Utils.debug('__:', item.outerWidth)
 
   return Utils.isAnimatedItem(i, animationProps)
     ? { transform: `translateX(${fadeOutOffset}px)`, animationDuration: `${duration}ms`, width: `${itemWidth}px` }

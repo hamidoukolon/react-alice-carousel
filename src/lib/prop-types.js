@@ -40,6 +40,7 @@ export const defaultProps = {
   autoPlay: false,
   autoPlayDirection: 'ltr',
   autoPlayInterval: 250,
+  autoWidth: false,
   buttonsDisabled: false,
   children: [],
   controlsStrategy: 'default',

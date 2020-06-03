@@ -22,9 +22,9 @@ describe('classnames: itemClassName: should return className, string', () => {
     expect(data.includes(clonedClassName)).toEqual(true)
   })
 
-  it('should`t includes cloned class', () => {
-    const data = Utils.itemClassName(0, { ...state, infinite: true })
-    expect(data.includes(clonedClassName)).toEqual(false)
+  it('should includes cloned class if stagePadding', () => {
+    const data = Utils.itemClassName(0, { ...state, infinite: true, stagePadding: { paddingLeft: 1 } })
+    expect(data.includes(clonedClassName)).toEqual(true)
   })
 
   it('should includes animated class', () => {

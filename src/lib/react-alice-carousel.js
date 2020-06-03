@@ -18,7 +18,7 @@ export default class AliceCarousel extends React.PureComponent {
       duration: props.duration,
       initialStageHeight: 0,
       isAutoPlaying: false,
-      isAutoplayCanceledOnAction: false,
+      isAutoPlayCanceledOnAction: false,
       slides,
       stagePadding: {},
       style: Utils.getDefaultStyles(),
@@ -254,11 +254,11 @@ export default class AliceCarousel extends React.PureComponent {
   }
 
   _onSlideChanged() {
-    const { isAutoPlaying, isAutoplayCanceledOnAction } = this.state
+    const { isAutoPlaying, isAutoPlayCanceledOnAction } = this.state
     const { disableAutoPlayOnAction, onSlideChanged } = this.props
 
-    if (disableAutoPlayOnAction && this.hasUserAction && !isAutoplayCanceledOnAction) {
-      this.setState({ isAutoplayCanceledOnAction: true, isAutoPlaying: false }, () => {
+    if (disableAutoPlayOnAction && this.hasUserAction && !isAutoPlayCanceledOnAction) {
+      this.setState({ isAutoPlayCanceledOnAction: true, isAutoPlaying: false }, () => {
         this._allowAnimation()
 
         if (onSlideChanged) {
@@ -424,7 +424,7 @@ export default class AliceCarousel extends React.PureComponent {
     const { isAutoPlaying } = this.state
 
     this.hasUserAction = true
-    this.setState({ isAutoPlaying: !isAutoPlaying, isAutoplayCanceledOnAction: true }, () => {
+    this.setState({ isAutoPlaying: !isAutoPlaying, isAutoPlayCanceledOnAction: true }, () => {
       isAutoPlaying ? this._pause() : this._play()
     })
   }
@@ -639,9 +639,10 @@ export default class AliceCarousel extends React.PureComponent {
 
   _isFadeOutAnimationAllowed = () => {
     const { stagePadding, items } = this.state
+    const { fadeOutAnimation, autoWidth } = this.props
     const hasNoStagePadding = !(stagePadding.paddingLeft || stagePadding.paddingRight)
 
-    return this.props.fadeOutAnimation && items === 1 && hasNoStagePadding
+    return fadeOutAnimation && !autoWidth && items === 1 && hasNoStagePadding
   }
 
   _isSwipeDisabled = () => {
@@ -698,7 +699,7 @@ export default class AliceCarousel extends React.PureComponent {
   }
 
   _renderStageItem = (item, i) => {
-    const style = Utils.itemStyles(i, this.state, this.animationProps)
+    const style = Utils.itemStyles(i, this.state, this.animationProps, item)
     const className = Utils.itemClassName(i, this.state, this.animationProps)
     return <Views.StageItem styles={style} className={className} key={`stage-item-${i}`} item={item} />
   }
