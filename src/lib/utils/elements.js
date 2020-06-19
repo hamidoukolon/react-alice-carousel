@@ -163,3 +163,13 @@ export function shouldDisableDots(props, state) {
 
   return false
 }
+
+export const createSizeGrid = (element) => {
+  if (isElement(element)) {
+    return Array.from(element.children).map((e) =>  {
+      return Utils.getElementDimensions(e).width
+    })
+  }
+
+  return []
+}

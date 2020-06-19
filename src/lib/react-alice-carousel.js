@@ -19,6 +19,7 @@ export default class AliceCarousel extends React.PureComponent {
       initialStageHeight: 0,
       isAutoPlaying: false,
       isAutoPlayCanceledOnAction: false,
+      sizesGrid: [],
       slides,
       stagePadding: {},
       style: Utils.getDefaultStyles(),
@@ -699,7 +700,7 @@ export default class AliceCarousel extends React.PureComponent {
   }
 
   _renderStageItem = (item, i) => {
-    const style = Utils.itemStyles(i, this.state, this.animationProps, item)
+    const style = Utils.itemStyles(i, this.state, this.animationProps)
     const className = Utils.itemClassName(i, this.state, this.animationProps)
     return <Views.StageItem styles={style} className={className} key={`stage-item-${i}`} item={item} />
   }
