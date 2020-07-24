@@ -10,7 +10,11 @@ export const getStageItemClassName = (i = 0, state: State) => {
 };
 
 export const isActiveItem = (i = 0, state: State) => {
-	const { activeIndex, itemsInSlide, itemsOffset } = state;
+	const { activeIndex, itemsInSlide, itemsOffset, infinite, autoWidth } = state;
+
+	if (infinite && autoWidth) {
+		return i - itemsInSlide === activeIndex;
+	}
 
 	const index = activeIndex + itemsInSlide + itemsOffset;
 	return i >= index && i < index + itemsInSlide;

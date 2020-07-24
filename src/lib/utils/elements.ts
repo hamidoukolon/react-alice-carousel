@@ -15,12 +15,15 @@ export const getItemsOffset = (props: Props) => {
 };
 
 export const createClones = (props: Props) => {
-	const { responsive } = props;
+	const { responsive, autoWidth, infinite } = props;
 	const slides = getSlides(props);
 	const itemsCount = getItemsCount(props);
 	const itemsOffset = getItemsOffset(props);
-	const itemsInSlide = Utils.getTotalItemsInSlide(responsive, itemsCount);
+	let itemsInSlide = Utils.getItemsInSlide(responsive, itemsCount);
 
+	if (autoWidth && infinite) {
+		itemsInSlide = itemsCount;
+	}
 	const cursor = Math.min(itemsInSlide, itemsCount) + itemsOffset;
 	const clonesAfter = slides.slice(0, cursor);
 	const clonesBefore = slides.slice(-cursor);

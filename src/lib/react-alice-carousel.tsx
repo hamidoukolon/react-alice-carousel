@@ -79,7 +79,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	}
 
 	async _slideToItem(activeIndex) {
-		const { itemsOffset, itemsInSlide, itemsCount, sizesGrid, transitionDuration, stageWidth, infinite } = this.state;
+		const { itemsInSlide, itemsCount, transitionDuration } = this.state;
 
 		if (
 			this.isAnimationDisabled ||
@@ -97,8 +97,8 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		await this.setState({
 			activeIndex,
 			translate3d,
-			transitionDuration,
 			transition,
+			transitionDuration,
 		});
 
 		await Utils.sleep(transitionDuration);
@@ -109,7 +109,6 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		const { activeIndex, itemsCount } = this.state;
 
 		if (Utils.shouldRecalculateSlideIndex(activeIndex, itemsCount)) {
-			console.debug('__REC:', activeIndex);
 			const nextIndex = Utils.getNextSlideIndex(activeIndex, itemsCount);
 			await this._handleUpdateSlidePosition(nextIndex);
 		}
@@ -118,16 +117,14 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 	async _handleUpdateSlidePosition(activeIndex) {
 		const { transitionDuration } = this.state;
-		const transition = Utils.getTransitionProperty({ transitionDuration: 0 });
 		const translate3d = Utils.getTranslate3dProperty(activeIndex, this.state);
-
-		console.debug('__D:', activeIndex);
+		const transition = Utils.getTransitionProperty({ transitionDuration: 0 });
 
 		await this.setState({
 			activeIndex,
 			translate3d,
-			transitionDuration,
 			transition,
+			transitionDuration,
 		});
 	}
 

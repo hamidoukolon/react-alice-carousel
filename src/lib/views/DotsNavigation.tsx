@@ -4,31 +4,39 @@ import * as Utils from '../utils';
 import { State } from '../types';
 
 export const DotsNavigation = ({ state, onClick, onMouseEnter, onMouseLeave }: Props) => {
-	const { itemsCount, itemsInSlide, infinite } = state;
+	const { itemsCount, itemsInSlide, infinite, autoWidth, activeIndex } = state;
 	const { isNextSlideDisabled } = Utils.getSlideItemInfo(state);
-	const dotsLength = Utils.getDotsNavigationLength(itemsCount, itemsInSlide);
+	const dotsLength = Utils.getDotsNavigationLength(itemsCount, itemsInSlide, infinite, autoWidth);
 
 	return (
 		<ul className="alice-carousel__dots">
 			{Array.from({ length: itemsCount }).map((item, i) => {
 				if (i < dotsLength) {
-					const isTheLastDotIndex = checkIsTheLastDotIndex(i, Boolean(infinite), dotsLength);
 					// TODO check, refactoring
-					const itemIndex = getItemIndexForDotNavigation(
-						i,
-						isTheLastDotIndex,
-						itemsCount,
-						itemsInSlide,
-					);
-					const activeIndex = Utils.getActiveSlideIndex(isNextSlideDisabled, state);
-					const className = activeIndex === i ? ' __active' : '';
+
+					const isTheLastDotIndex = checkIsTheLastDotIndex(i, Boolean(infinite), dotsLength);
+					let nextIndex = getItemIndexForDotNavigation(i, isTheLastDotIndex, itemsCount, itemsInSlide);
+					let currentIndex = Utils.getActiveSlideIndex(isNextSlideDisabled, state);
+
+					if (infinite && autoWidth) {
+						currentIndex = activeIndex;
+
+						if (activeIndex < 0) {
+							currentIndex = itemsCount - 1;
+						} else if (activeIndex >= itemsCount) {
+							currentIndex = 0;
+						}
+						nextIndex = i;
+					}
+
+					const className = currentIndex === i ? ' __active' : '';
 
 					return (
 						<li
 							key={`dot-item-${i}`}
 							onMouseEnter={onMouseEnter}
 							onMouseLeave={onMouseLeave}
-							onClick={() => onClick(itemIndex)}
+							onClick={() => onClick(nextIndex)}
 							className={`alice-carousel__dots-item${className}`}
 						/>
 					);
