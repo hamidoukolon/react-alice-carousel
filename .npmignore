@@ -53,7 +53,7 @@ package-lock.json
 # Static files
 app
 build
-config
+configDev
 tests
 public
 static

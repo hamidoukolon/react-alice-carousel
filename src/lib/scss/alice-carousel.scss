@@ -1,3 +1,5 @@
+@import 'fade-animation';
+
 $clr-base: #e0e4fb !default;
 $clr-blue: #465798 !default;
 $clr-darkred: darkred !default;
@@ -51,6 +53,9 @@ $play-btn-size: 32px !default;
     * {
       line-height: initial;
     }
+    &.__active {
+      box-shadow: 0 0 1px 1px $clr-darkred inset;
+    }
     &.__hidden {
       visibility: hidden;
 
@@ -65,7 +70,7 @@ $play-btn-size: 32px !default;
 
   box-sizing: border-box;
   width: 50%;
-  padding: 15px 10px;
+  padding: 10px 5px;
 
   [data-area] {
     &::after {
@@ -86,6 +91,9 @@ $play-btn-size: 32px !default;
   display: inline-block;
 
   cursor: pointer;
+
+  padding: 5px;
+  margin: 0;
 
   color: $clr-blue;
   &:hover {
@@ -212,5 +220,3 @@ $play-btn-size: 32px !default;
     line-height: 0;
   }
 }
-
-@import 'fade-animation';
