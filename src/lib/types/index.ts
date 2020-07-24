@@ -26,6 +26,7 @@ export type Props = {
 
 export type State = {
 	clones: any[];
+	autoWidth: boolean;
 	itemsCount: number;
 	itemsInSlide: number;
 	activeIndex: number;

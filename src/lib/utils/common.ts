@@ -25,7 +25,7 @@ export const getTotalItemsInSlide = (responsiveConfig?: Responsive, childrenLeng
 };
 
 export const calculateInitialProps = (props: Props, el): State => {
-	const { startIndex, responsive, infinite, autoPlay, autoWidth } = props;
+	const { startIndex, responsive, infinite, autoPlay, autoWidth = false } = props;
 	const transition = Utils.getTransitionProperty();
 	const itemsCount = getItemsCount(props);
 	const itemsOffset = Utils.getItemsOffset(props);
@@ -38,9 +38,10 @@ export const calculateInitialProps = (props: Props, el): State => {
 	const sizesFixedGrid = Utils.createFixedWidthGrid(clones, stageWidth, itemsInSlide);
 	const sizesGrid = autoWidth ? sizesAutoGrid : sizesFixedGrid;
 
-	const translate3d = Utils.getTranslatePosition({ activeIndex, itemsInSlide, itemsOffset, sizesGrid });
+	const translate3d = Utils.getTranslate3dProperty(activeIndex, { autoWidth, itemsInSlide, itemsOffset, sizesGrid });
 
 	return {
+		autoWidth,
 		activeIndex,
 		itemsCount,
 		itemsOffset,

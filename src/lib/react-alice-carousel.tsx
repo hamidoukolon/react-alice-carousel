@@ -22,6 +22,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 		this.state = {
 			activeIndex: 0,
+			autoWidth: false,
 			clones,
 			itemsCount,
 			itemsOffset: 0,
@@ -78,7 +79,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	}
 
 	async _slideToItem(activeIndex) {
-		const { itemsOffset, itemsInSlide, itemsCount, sizesGrid, transitionDuration, stageWidth } = this.state;
+		const { itemsOffset, itemsInSlide, itemsCount, sizesGrid, transitionDuration, stageWidth, infinite } = this.state;
 
 		if (
 			this.isAnimationDisabled ||
@@ -91,14 +92,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		this._onSlideChange();
 
 		const transition = Utils.getTransitionProperty({ transitionDuration });
-		const translate3d = Utils.getTranslatePositionAutoWidth({
-			activeIndex,
-			itemsOffset,
-			itemsInSlide,
-			sizesGrid,
-			itemsCount,
-			stageWidth,
-		});
+		const translate3d = Utils.getTranslate3dProperty(activeIndex, this.state);
 
 		await this.setState({
 			activeIndex,
@@ -123,9 +117,9 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	};
 
 	async _handleUpdateSlidePosition(activeIndex) {
-		const { itemsOffset, itemsInSlide, sizesGrid, transitionDuration } = this.state;
+		const { transitionDuration } = this.state;
 		const transition = Utils.getTransitionProperty({ transitionDuration: 0 });
-		const translate3d = Utils.getTranslatePosition({ activeIndex, itemsOffset, itemsInSlide, sizesGrid });
+		const translate3d = Utils.getTranslate3dProperty(activeIndex, this.state);
 
 		console.debug('__D:', activeIndex);
 
