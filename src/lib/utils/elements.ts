@@ -1,5 +1,6 @@
 import * as Utils from '.';
 import { Props, GirdCell } from '../types';
+import { ElementRef } from 'react';
 
 export const getSlides = (props: Props) => {
 	const { children = [], items = [] } = props;
@@ -41,13 +42,15 @@ export const isElement = (element) => {
 
 export const createAutoWidthGrid = (el) => {
 	if (isElement(el)) {
-		const children = Array.from(el.children || []);
+		const children: HTMLElement[] = Array.from(el.children || []);
+
+		console.debug('__CH:', children);
 
 		return children.reduce<GirdCell[]>((acc, child, i) => {
 			let position = 0;
 			const previewsChildCursor = i - 1;
 			const previewsChild = acc[previewsChildCursor];
-			const { width = 0 } = getElementDimensions(child);
+			const { width = 0 } = getElementDimensions(child?.firstChild);
 
 			if (previewsChild) {
 				position = previewsChildCursor === 0 ? previewsChild.width : previewsChild.width + previewsChild.position;

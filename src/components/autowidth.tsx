@@ -11,16 +11,16 @@ export default class Autowidth extends React.PureComponent<AppProps> {
 				<AliceCarousel
 					// paddingLeft={100}
 					// startIndex={0}
-					// infinite={true}
+					infinite={true}
 					autoWidth={true}
 					// responsive={{ 0: { items: 1 } }}
 					// transitionDuration={400}
 					// onSlideChange={console.debug}
 				>
-					<div className="item" style={{ width: 100 }}>
+					<div className="item">
 						<h1>1</h1>
 					</div>
-					<div className="item" style={{ width: 200 }}>
+					<div className="item">
 						<h1>2</h1>
 					</div>
 					<div className="item" style={{ width: 120 }}>
