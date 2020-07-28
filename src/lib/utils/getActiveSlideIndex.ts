@@ -1,7 +1,7 @@
 import { State } from '../types';
 
 export const getActiveSlideIndex = (isNextSlideDisabled, state: State) => {
-	const { activeIndex: index, itemsInSlide, itemsCount, infinite, autoWidth } = state || {};
+	const { activeIndex: index, itemsInSlide, itemsCount } = state || {};
 	const activeIndex = index + itemsInSlide;
 
 	return itemsInSlide === 1

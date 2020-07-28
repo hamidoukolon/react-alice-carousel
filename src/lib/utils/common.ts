@@ -4,8 +4,8 @@ import { getItemsCount } from '.';
 
 export const preserveProps = (prevProps: Props, nextProps: Props) => {
 	const { preservePosition } = prevProps || {};
-	const { startIndex } = nextProps || {};
-	return preservePosition ? { ...prevProps, startIndex } : nextProps;
+	const { activeIndex } = nextProps || {};
+	return preservePosition ? { ...prevProps, activeIndex } : nextProps;
 };
 
 export const getItemsInSlide = (
@@ -33,12 +33,12 @@ export const getItemsInSlide = (
 };
 
 export const calculateInitialProps = (props: Props, el): State => {
-	const { startIndex, responsive, infinite, autoPlay, autoWidth = false } = props;
+	const { responsive, infinite, autoPlay, autoWidth = false } = props;
 	const transition = Utils.getTransitionProperty();
 	const itemsCount = getItemsCount(props);
 	const itemsOffset = Utils.getItemsOffset(props);
 	const itemsInSlide = getItemsInSlide(responsive, itemsCount, autoWidth, infinite);
-	const activeIndex = Utils.getStartIndex(startIndex, itemsCount);
+	const activeIndex = Utils.getStartIndex(props.activeIndex, itemsCount);
 	const { width: stageWidth } = Utils.getElementDimensions(el);
 
 	const clones = Utils.createClones(props);
@@ -64,5 +64,6 @@ export const calculateInitialProps = (props: Props, el): State => {
 		isAutoPlayCanceledOnAction: false,
 		transitionDuration: props.transitionDuration,
 		transition,
+		fadeOutOffset: null,
 	};
 };

@@ -2,10 +2,10 @@ import * as Utils from '.';
 import { Props, State, Style, Transition } from '../types';
 
 export const getRenderWrapperStyles = (props: Props, state: State, element) => {
-	const { paddingLeft, paddingRight, autoHeight, duration } = props || {};
+	const { paddingLeft, paddingRight, autoHeight, transitionDuration } = props || {};
 	// TODO
 	const height = autoHeight && element && Utils.getGalleryItemHeight(/*element, props, state*/);
-	const transition = height ? `height ${duration}ms` : undefined;
+	const transition = height ? `height ${transitionDuration}ms` : undefined;
 
 	return {
 		height,
@@ -40,6 +40,14 @@ export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
 	const { position } = sizesGrid[cursor] || {};
 
 	return position;
+};
+
+export const getFadeOutOffset = (nextIndex, state: Partial<State>) => {
+	const { sizesGrid, activeIndex } = state;
+	const position = sizesGrid && sizesGrid[nextIndex + 1].position;
+
+	console.debug('__:', activeIndex, nextIndex);
+	return position || null;
 };
 
 // TODO

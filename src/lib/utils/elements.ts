@@ -1,6 +1,5 @@
 import * as Utils from '.';
 import { Props, GirdCell } from '../types';
-import { ElementRef } from 'react';
 
 export const getSlides = (props: Props) => {
 	const { children = [], items = [] } = props;
@@ -43,8 +42,6 @@ export const isElement = (element) => {
 export const createAutoWidthGrid = (el) => {
 	if (isElement(el)) {
 		const children: HTMLElement[] = Array.from(el.children || []);
-
-		console.debug('__CH:', children);
 
 		return children.reduce<GirdCell[]>((acc, child, i) => {
 			let position = 0;

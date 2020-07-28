@@ -1,4 +1,5 @@
 export type Props = {
+	activeIndex?: number;
 	items?: any[];
 	children?: any[];
 	infinite?: boolean;
@@ -9,18 +10,19 @@ export type Props = {
 	autoPlayInterval?: number;
 	autoPlayDirection?: string | 'ltr' | 'rtl';
 	controlsStrategy?: string | 'default' | 'responsive';
+	disableAutoPlayOnAction?: boolean;
 	paddingLeft?: number;
 	paddingRight?: number;
 	autoWidth?: boolean;
 	autoHeight?: boolean;
 	autoPlay?: boolean;
-	duration?: number;
+	fadeOutAnimation?: boolean;
 	stopAutoPlayOnHover?: boolean;
 	preservePosition?: boolean;
-	startIndex?: number;
 	responsive?: Responsive;
-	onInitialized: (e: EventObject) => void;
-	onSlideChange: (e: EventObject) => void;
+	onInitialized?: (e: EventObject) => void;
+	onSlideChange?: (e: EventObject) => void;
+	onSlideChanged?: (e: EventObject) => void;
 	transitionDuration?: number;
 };
 
@@ -40,6 +42,7 @@ export type State = {
 	transitionDuration?: number;
 	transition: string;
 	isAutoPlayCanceledOnAction: boolean;
+	fadeOutOffset: number | null;
 };
 
 export type Style = {
@@ -53,7 +56,7 @@ export type Transition = {
 };
 
 export type Responsive = {
-	[key: number]: {
+	[key: string]: {
 		items: number;
 	};
 };

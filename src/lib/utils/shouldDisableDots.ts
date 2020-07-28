@@ -2,13 +2,13 @@ import { Props, State } from '../types';
 
 export function shouldDisableDots(props: Props, state: State) {
 	const { dotsDisabled, controlsStrategy } = props || {};
-	const { itemsInSlide, itemsCount } = state || {};
+	const { itemsInSlide, itemsCount, autoWidth } = state || {};
 
 	if (dotsDisabled) {
 		return true;
 	}
 
-	if (controlsStrategy === 'responsive' && itemsInSlide === itemsCount) {
+	if (controlsStrategy === 'responsive' && !autoWidth && itemsInSlide === itemsCount) {
 		return true;
 	}
 

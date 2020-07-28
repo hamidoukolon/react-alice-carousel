@@ -1,21 +1,27 @@
 export const defaultProps = {
-	children: [],
-	items: [],
-	infinite: false,
-	showSlideInfo: false,
-	dotsDisabled: false,
-	buttonsDisabled: false,
-	playButtonEnabled: false,
-	controlsStrategy: 'default',
-	autoPlayDirection: 'ltr',
-	autoPlayInterval: 250,
-	autoWidth: false,
+	activeIndex: 0, // 1
+	children: [], // 1
+	items: [], // 1
+	infinite: false, // 1
+	showSlideInfo: false, // 1
+	dotsDisabled: false, // 1
+	buttonsDisabled: false, // 1
+	playButtonEnabled: false, // 1
+	controlsStrategy: 'default', // 1
+	autoPlayDirection: 'ltr', // 1
+	autoPlayInterval: 400, // 1
+	autoWidth: false, // 1
 	autoHeight: false,
-	autoPlay: false,
-	transitionDuration: 800,
-	stopAutoPlayOnHover: true,
+	autoPlay: false, // 1
+	disableAutoPlayOnAction: true, // 1
+	fadeOutAnimation: false,
+	transitionDuration: 400, // 1
+	stopAutoPlayOnHover: true, // 1
 	preservePosition: false,
-	startIndex: 0,
-	onInitialized: () => undefined,
-	onSlideChange: () => undefined,
+	responsive: {},
+	paddingLeft: 0,
+	paddingRight: 0,
+	onInitialized: () => undefined, // 1
+	onSlideChange: () => undefined, // 1
+	onSlideChanged: () => undefined, // 1
 };
