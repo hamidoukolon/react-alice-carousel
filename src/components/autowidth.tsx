@@ -14,7 +14,7 @@ export default class Autowidth extends React.PureComponent<AppProps> {
 					infinite={true}
 					autoWidth={true}
 					responsive={{ 0: { items: 7 } }}
-					// transitionDuration={10000}
+					// animationDuration={10000}
 					onSlideChanged={console.debug}
 				>
 					<div className="item">

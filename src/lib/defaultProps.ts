@@ -15,7 +15,7 @@ export const defaultProps = {
 	autoPlay: false, // 1
 	disableAutoPlayOnAction: true, // 1
 	fadeOutAnimation: false,
-	transitionDuration: 400, // 1
+	animationDuration: 400, // 1
 	stopAutoPlayOnHover: true, // 1
 	preservePosition: false,
 	responsive: {},

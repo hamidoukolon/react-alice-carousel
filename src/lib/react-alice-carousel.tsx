@@ -33,9 +33,11 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			isAutoPlayCanceledOnAction: false,
 			translate3d: 0,
 			sizesGrid: [],
-			transitionDuration: 0,
+			animationDuration: 0,
 			transition: Utils.getTransitionProperty(),
-			fadeOutOffset: null,
+			fadeoutIndex: null,
+			fadeoutPosition: null,
+			fadeoutAnimationProcessing: false,
 		};
 
 		this.isHovered = false;
@@ -82,32 +84,42 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	}
 
 	async _slideToItem(activeIndex) {
-		const { itemsInSlide, itemsCount, transitionDuration } = this.state;
+		const { infinite, fadeOutAnimation } = this.props;
+		const { itemsInSlide, itemsCount, animationDuration } = this.state;
 
 		if (
 			this.isAnimationDisabled ||
 			activeIndex === this.state.activeIndex ||
-			(!this.props.infinite && Utils.shouldCancelSlide(activeIndex, itemsCount, itemsInSlide))
+			(!infinite && Utils.shouldCancelSlide(activeIndex, itemsCount, itemsInSlide))
 		) {
 			return;
 		}
-
-		this.isAnimationDisabled = true;
 		this._onSlideChange();
+		this.isAnimationDisabled = true;
 
-		const transition = Utils.getTransitionProperty({ transitionDuration });
+		let fadeoutIndex;
+		let fadeoutPosition;
+		let transition = Utils.getTransitionProperty({ animationDuration });
+
+		if (fadeOutAnimation) {
+			transition = Utils.getTransitionProperty();
+			fadeoutIndex = Utils.getFadeoutIndex(this.state.activeIndex);
+			fadeoutPosition = Utils.getFadeoutPosition(activeIndex, this.state);
+		}
+
 		const translate3d = Utils.getTranslate3dProperty(activeIndex, this.state);
-		const fadeOutOffset = Utils.getFadeOutOffset(activeIndex, this.state);
+		// const fadeoutPosition = Utils.getFadeoutAnimationPosition(activeIndex, this.state);
 
 		await this.setState({
 			activeIndex,
 			translate3d,
 			transition,
-			transitionDuration,
-			fadeOutOffset,
+			animationDuration,
+			fadeoutPosition,
+			fadeoutIndex,
 		});
 
-		await Utils.sleep(transitionDuration);
+		await Utils.sleep(animationDuration);
 		await this._afterSlide();
 	}
 
@@ -119,19 +131,27 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			await this._handleUpdateSlidePosition(nextIndex);
 		}
 
+		// if (fadeoutPosition) {
+		// 	await this.setState({
+		// 		fadeoutIndex: null,
+		// 		fadeoutPosition: null,
+		// 		transition: Utils.getTransitionProperty({ animationDuration }),
+		// 	});
+		// }
+
 		this._onSlideChanged();
 	};
 
 	async _handleUpdateSlidePosition(activeIndex) {
-		const { transitionDuration } = this.state;
+		const { animationDuration } = this.state;
 		const translate3d = Utils.getTranslate3dProperty(activeIndex, this.state);
-		const transition = Utils.getTransitionProperty({ transitionDuration: 0 });
+		const transition = Utils.getTransitionProperty({ animationDuration: 0 });
 
 		await this.setState({
 			activeIndex,
 			translate3d,
 			transition,
-			transitionDuration,
+			animationDuration,
 		});
 	}
 

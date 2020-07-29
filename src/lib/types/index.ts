@@ -23,7 +23,7 @@ export type Props = {
 	onInitialized?: (e: EventObject) => void;
 	onSlideChange?: (e: EventObject) => void;
 	onSlideChanged?: (e: EventObject) => void;
-	transitionDuration?: number;
+	animationDuration?: number;
 };
 
 export type State = {
@@ -39,10 +39,12 @@ export type State = {
 	stageWidth?: number;
 	sizesGrid: GirdCell[];
 	initialStageHeight: number;
-	transitionDuration?: number;
+	animationDuration?: number;
 	transition: string;
 	isAutoPlayCanceledOnAction: boolean;
-	fadeOutOffset: number | null;
+	fadeoutPosition: number | null;
+	fadeoutIndex: number | null;
+	fadeoutAnimationProcessing: boolean;
 };
 
 export type Style = {
@@ -51,7 +53,7 @@ export type Style = {
 };
 
 export type Transition = {
-	transitionDuration?: number;
+	animationDuration?: number;
 	transitionTimingFunction?: string;
 };
 

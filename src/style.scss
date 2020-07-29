@@ -25,25 +25,6 @@ html {
 .alice-carousel__wrapper {
 	border: solid 1px rgba(#465798, 0.3);
 }
-.alice-carousel__stage-item {
-	h1 {
-		position: relative;
-	}
-}
-.alice-carousel__stage-item.__active {
-	h1 {
-		&:after {
-			content: '';
-			position: absolute;
-			display: block;
-			border: 1px solid rgba(#465798, 0.5);
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-		}
-	}
-}
 
 .alice-carousel__stage-item {
 	.item {

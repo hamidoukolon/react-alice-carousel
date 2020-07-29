@@ -2,10 +2,10 @@ import * as Utils from '.';
 import { Props, State, Style, Transition } from '../types';
 
 export const getRenderWrapperStyles = (props: Props, state: State, element) => {
-	const { paddingLeft, paddingRight, autoHeight, transitionDuration } = props || {};
+	const { paddingLeft, paddingRight, autoHeight, animationDuration } = props || {};
 	// TODO
 	const height = autoHeight && element && Utils.getGalleryItemHeight(/*element, props, state*/);
-	const transition = height ? `height ${transitionDuration}ms` : undefined;
+	const transition = height ? `height ${animationDuration}ms` : undefined;
 
 	return {
 		height,
@@ -16,8 +16,8 @@ export const getRenderWrapperStyles = (props: Props, state: State, element) => {
 };
 
 export const getTransitionProperty = (options?: Transition): string => {
-	const { transitionDuration = 0, transitionTimingFunction = '' } = options || {};
-	return `transform ${transitionDuration}ms ${transitionTimingFunction}`;
+	const { animationDuration = 0, transitionTimingFunction = '' } = options || {};
+	return `transform ${animationDuration}ms ${transitionTimingFunction}`;
 };
 
 export const getRenderStageStyles = (nextStyles, currentStyles: Style): Style => {
@@ -28,10 +28,18 @@ export const getRenderStageStyles = (nextStyles, currentStyles: Style): Style =>
 };
 
 export const getStageItemStyles = (i: number, state: State) => {
-	const { sizesGrid } = state;
-	const item = sizesGrid[i];
+	const { sizesGrid, fadeoutPosition, fadeoutIndex, animationDuration } = state;
+	const { width } = sizesGrid[i] || {};
 
-	return { width: item?.width };
+	if (fadeoutPosition && fadeoutIndex === 9000) {
+		return {
+			transform: `translateX(${fadeoutPosition}px)`,
+			animationDuration: `${animationDuration}ms`,
+			width: `${width}px`,
+		};
+	}
+
+	return { width };
 };
 
 export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
@@ -40,14 +48,6 @@ export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
 	const { position } = sizesGrid[cursor] || {};
 
 	return position;
-};
-
-export const getFadeOutOffset = (nextIndex, state: Partial<State>) => {
-	const { sizesGrid, activeIndex } = state;
-	const position = sizesGrid && sizesGrid[nextIndex + 1].position;
-
-	console.debug('__:', activeIndex, nextIndex);
-	return position || null;
 };
 
 // TODO

@@ -62,8 +62,10 @@ export const calculateInitialProps = (props: Props, el): State => {
 		initialStageHeight: 0,
 		isAutoPlaying: Boolean(autoPlay),
 		isAutoPlayCanceledOnAction: false,
-		transitionDuration: props.transitionDuration,
+		animationDuration: props.animationDuration,
 		transition,
-		fadeOutOffset: null,
+		fadeoutPosition: null,
+		fadeoutIndex: null,
+		fadeoutAnimationProcessing: false,
 	};
 };
