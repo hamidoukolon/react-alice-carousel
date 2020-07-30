@@ -1,5 +1,5 @@
 import * as Utils from '.';
-import { Props, GirdCell } from '../types';
+import { GirdCell, Props, State } from '../types';
 
 export const getSlides = (props: Props) => {
 	const { children = [], items = [] } = props;
@@ -18,13 +18,12 @@ export const createClones = (props: Props) => {
 	const { responsive, autoWidth, infinite } = props;
 	const slides = getSlides(props);
 	const itemsCount = getItemsCount(props);
-	const itemsOffset = getItemsOffset(props);
 	let itemsInSlide = Utils.getItemsInSlide(responsive, itemsCount);
 
 	if (autoWidth && infinite) {
 		itemsInSlide = itemsCount;
 	}
-	const cursor = Math.min(itemsInSlide, itemsCount) + itemsOffset;
+	const cursor = Math.min(itemsInSlide, itemsCount) + getItemsOffset(props);
 	const clonesAfter = slides.slice(0, cursor);
 	const clonesBefore = slides.slice(-cursor);
 
@@ -90,10 +89,25 @@ export function getElementDimensions(element) {
 	return {};
 }
 
-export const getGalleryItemHeight = () => {
-	return 100;
+export const getAutoHeightProperty = (stageComponent: Element, props: Props, state: State) => {
+	const elementCursor = getElementCursor(props, state);
+	const element = getElementFirstChild(stageComponent, elementCursor);
+
+	if (isElement(element)) {
+		const styles = getComputedStyle(element);
+		const marginTop = parseFloat(styles['marginTop']);
+		const marginBottom = parseFloat(styles['marginBottom']);
+
+		return Math.ceil(element.offsetHeight + marginTop + marginBottom);
+	}
 };
 
-/*	stageComponent: HTMLDivElement,
-props: Props,
-state: State,*/
+export const getElementCursor = (props: Props, state: State) => {
+	const { activeIndex, itemsInSlide } = state;
+	return activeIndex + itemsInSlide + Utils.getItemsOffset(props);
+};
+
+export const getElementFirstChild = (stageComponent, cursor) => {
+	const children = (stageComponent && stageComponent.children) || [];
+	return (children[cursor] && children[cursor].firstChild) || null;
+};

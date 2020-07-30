@@ -3,7 +3,7 @@ import AliceCarousel from '../lib/react-alice-carousel';
 import '../lib/scss/alice-carousel.scss';
 import '../style.scss';
 
-export default class App extends React.PureComponent<AppProps> {
+export default class Autoheigth extends React.PureComponent<AppProps> {
 	render() {
 		return (
 			<div className="app">
@@ -11,33 +11,33 @@ export default class App extends React.PureComponent<AppProps> {
 				<AliceCarousel
 					paddingLeft={100}
 					paddingRight={10}
+					activeIndex={2}
 					// infinite={true}
-					// fadeoutAnimation={true}
-					// fadeoutAnimation
-					// responsive={{ 0: { items: 2 } }}
-					// animationDuration={600}
-
-					// autoHeight
-					// activeIndex={1}
-					// onSlideChange={console.debug}
+					autoHeight={true}
+					responsive={{ 0: { items: 3 } }}
+					animationDuration={1000}
+					onSlideChanged={console.debug}
 				>
-					<div className="item">
+					<div className="item" style={{ height: 120 }}>
 						<h1>1</h1>
 					</div>
-					<div className="item">
+					<div className="item" style={{ height: 200 }}>
 						<h1>2</h1>
 					</div>
-					<div className="item">
+					<div className="item" style={{ height: 120 }}>
 						<h1>3</h1>
 					</div>
-					<div className="item">
+					<div className="item" style={{ height: 140 }}>
 						<h1>4</h1>
 					</div>
 					<div className="item">
 						<h1>5</h1>
 					</div>
-					<div className="item">
+					<div className="item" style={{ height: 170 }}>
 						<h1>6</h1>
+					</div>
+					<div className="item" style={{ height: 220 }}>
+						<h1>7</h1>
 					</div>
 				</AliceCarousel>
 			</div>

@@ -3,8 +3,7 @@ import { Props, State, Style, Transition } from '../types';
 
 export const getRenderWrapperStyles = (props: Props, state: State, element) => {
 	const { paddingLeft, paddingRight, autoHeight, animationDuration } = props || {};
-	// TODO
-	const height = autoHeight && element && Utils.getGalleryItemHeight(/*element, props, state*/);
+	const height = autoHeight ? Utils.getAutoHeightProperty(element, props, state) : undefined;
 	const transition = height ? `height ${animationDuration}ms` : undefined;
 
 	return {
