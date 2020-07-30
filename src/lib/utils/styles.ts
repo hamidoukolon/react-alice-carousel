@@ -28,12 +28,18 @@ export const getRenderStageStyles = (nextStyles, currentStyles: Style): Style =>
 };
 
 export const getStageItemStyles = (i: number, state: State) => {
-	const { sizesGrid, fadeoutPosition, fadeoutIndex, animationDuration } = state;
+	const {
+		sizesGrid,
+		fadeoutAnimationIndex,
+		fadeoutAnimationPosition,
+		fadeoutAnimationProcessing,
+		animationDuration,
+	} = state;
 	const { width } = sizesGrid[i] || {};
 
-	if (fadeoutPosition && fadeoutIndex === 9000) {
+	if (fadeoutAnimationProcessing && fadeoutAnimationIndex === i) {
 		return {
-			transform: `translateX(${fadeoutPosition}px)`,
+			transform: `translateX(${fadeoutAnimationPosition}px)`,
 			animationDuration: `${animationDuration}ms`,
 			width: `${width}px`,
 		};

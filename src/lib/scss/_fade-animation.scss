@@ -12,17 +12,6 @@
   animation-name: fadeOut;
 }
 
-@-webkit-keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
-}
-
 @keyframes fadeOut {
   0% {
     opacity: 1;

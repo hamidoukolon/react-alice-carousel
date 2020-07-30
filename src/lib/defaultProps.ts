@@ -14,11 +14,11 @@ export const defaultProps = {
 	autoHeight: false,
 	autoPlay: false, // 1
 	disableAutoPlayOnAction: true, // 1
-	fadeOutAnimation: false,
+	fadeoutAnimation: false, // 1
 	animationDuration: 400, // 1
 	stopAutoPlayOnHover: true, // 1
 	preservePosition: false,
-	responsive: {},
+	responsive: {}, // 1
 	paddingLeft: 0,
 	paddingRight: 0,
 	onInitialized: () => undefined, // 1

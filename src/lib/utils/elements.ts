@@ -78,8 +78,7 @@ export const createFixedWidthGrid = (children, galleryWidth: number, itemsInSlid
 };
 
 export const getItemWidth = (galleryWidth: number, itemsInSlide: number) => {
-	const items = itemsInSlide || 1;
-	return galleryWidth && items > 0 ? galleryWidth / items : 0;
+	return itemsInSlide > 0 ? galleryWidth / itemsInSlide : galleryWidth;
 };
 
 export function getElementDimensions(element) {
@@ -92,7 +91,7 @@ export function getElementDimensions(element) {
 }
 
 export const getGalleryItemHeight = () => {
-	return 0;
+	return 100;
 };
 
 /*	stageComponent: HTMLDivElement,

@@ -16,7 +16,7 @@ export type Props = {
 	autoWidth?: boolean;
 	autoHeight?: boolean;
 	autoPlay?: boolean;
-	fadeOutAnimation?: boolean;
+	fadeoutAnimation?: boolean;
 	stopAutoPlayOnHover?: boolean;
 	preservePosition?: boolean;
 	responsive?: Responsive;
@@ -36,14 +36,14 @@ export type State = {
 	isAutoPlaying: boolean;
 	translate3d: number;
 	itemsOffset: number;
-	stageWidth?: number;
+	stageWidth: number;
 	sizesGrid: GirdCell[];
 	initialStageHeight: number;
 	animationDuration?: number;
 	transition: string;
 	isAutoPlayCanceledOnAction: boolean;
-	fadeoutPosition: number | null;
-	fadeoutIndex: number | null;
+	fadeoutAnimationIndex: number | null;
+	fadeoutAnimationPosition: number | null;
 	fadeoutAnimationProcessing: boolean;
 };
 
@@ -79,9 +79,4 @@ export type RootComponent = {
 export type GirdCell = {
 	width: number;
 	position: number;
-};
-
-export type SlideOptions = {
-	shouldSkipRecalculation?: boolean;
-	duration?: number;
 };

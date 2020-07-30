@@ -64,8 +64,8 @@ export const calculateInitialProps = (props: Props, el): State => {
 		isAutoPlayCanceledOnAction: false,
 		animationDuration: props.animationDuration,
 		transition,
-		fadeoutPosition: null,
-		fadeoutIndex: null,
+		fadeoutAnimationIndex: null,
+		fadeoutAnimationPosition: null,
 		fadeoutAnimationProcessing: false,
 	};
 };

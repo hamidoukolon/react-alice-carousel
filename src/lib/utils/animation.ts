@@ -11,23 +11,16 @@ export function animate(element, options) {
 	return element;
 }
 
-export const getFadeoutPosition = (nextIndex, state: Partial<State>) => {
-	const { sizesGrid } = state;
-	const position = (sizesGrid && sizesGrid[nextIndex].position) || null;
-	return position || null;
-};
-
-export const getFadeoutIndex = (currentIndex) => {
-	return currentIndex === 0 ? 1 : currentIndex + 1;
+export const getFadeoutAnimationIndex = (currentIndex) => {
+	return currentIndex + 1;
 };
 
 export const getFadeoutAnimationPosition = (nextIndex, state: State) => {
-	const { activeIndex, sizesGrid } = state;
-	const { width = 0 } = sizesGrid[0] || {};
+	const { activeIndex, stageWidth } = state;
 
 	if (nextIndex < activeIndex) {
-		return (activeIndex - nextIndex) * -width || 0;
+		return (activeIndex - nextIndex) * -stageWidth || 0;
 	} else {
-		return (nextIndex - activeIndex) * width || 0;
+		return (nextIndex - activeIndex) * stageWidth || 0;
 	}
 };
