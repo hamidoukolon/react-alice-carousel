@@ -16,14 +16,15 @@ export type Props = {
 	autoWidth?: boolean;
 	autoHeight?: boolean;
 	autoPlay?: boolean;
-	fadeoutAnimation?: boolean;
 	stopAutoPlayOnHover?: boolean;
 	preservePosition?: boolean;
 	responsive?: Responsive | null;
 	onInitialized?: (e: EventObject) => void;
 	onSlideChange?: (e: EventObject) => void;
 	onSlideChanged?: (e: EventObject) => void;
+	animationType?: 'slide' | 'fadeout' | string; //
 	animationDuration?: number;
+	animationEasingFunction?: string;
 };
 
 export type State = {
@@ -54,7 +55,7 @@ export type Style = {
 
 export type Transition = {
 	animationDuration?: number;
-	transitionTimingFunction?: string;
+	animationEasingFunction?: string;
 };
 
 export type Responsive = {

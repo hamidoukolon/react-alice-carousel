@@ -11,11 +11,12 @@ export default class App extends React.PureComponent<AppProps> {
 				<AliceCarousel
 					// paddingLeft={100}
 					// paddingRight={1}
-					// infinite={true}
-					// fadeoutAnimation={true}
+					infinite={true}
+					// animationType=
 					// fadeoutAnimation
 					// responsive={{ 0: { items: 3 } }}
 					animationDuration={800}
+					animationEasingFunction={'cubic-bezier(0, 1, 1, 1)'}
 					// autoHeight
 					// activeIndex={1}
 					// onSlideChange={console.debug}

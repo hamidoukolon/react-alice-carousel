@@ -15,8 +15,8 @@ export const getRenderWrapperStyles = (props: Props, state: State, element) => {
 };
 
 export const getTransitionProperty = (options?: Transition): string => {
-	const { animationDuration = 0, transitionTimingFunction = '' } = options || {};
-	return `transform ${animationDuration}ms ${transitionTimingFunction}`;
+	const { animationDuration = 0, animationEasingFunction = '' } = options || {};
+	return `transform ${animationDuration}ms ${animationEasingFunction}`;
 };
 
 export const getRenderStageStyles = (nextStyles, currentStyles: Style): Style => {
@@ -39,6 +39,7 @@ export const getStageItemStyles = (i: number, state: State) => {
 	if (fadeoutAnimationProcessing && fadeoutAnimationIndex === i) {
 		return {
 			transform: `translateX(${fadeoutAnimationPosition}px)`,
+			// TODO
 			animationDuration: `${animationDuration}ms`,
 			width: `${width}px`,
 		};

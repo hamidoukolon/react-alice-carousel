@@ -60,10 +60,10 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 	get isFadeoutAnimationAllowed() {
 		const { itemsInSlide } = this.state;
-		const { fadeoutAnimation, paddingLeft, paddingRight, autoWidth, autoHeight } = this.props;
+		const { animationType, paddingLeft, paddingRight, autoWidth, autoHeight } = this.props;
 
 		return (
-			fadeoutAnimation &&
+			animationType === 'fadeout' &&
 			itemsInSlide === 1 &&
 			!(paddingLeft || paddingRight || autoWidth || autoHeight)
 		);
@@ -121,7 +121,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		fadeoutAnimationIndex: number | null = null,
 		fadeoutAnimationPosition: number | null = null,
 	) {
-		const { infinite } = this.props;
+		const { infinite, animationEasingFunction } = this.props;
 		const { itemsInSlide, itemsCount, animationDuration } = this.state;
 
 		if (
@@ -142,7 +142,10 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			fadeoutAnimationProcessing = true;
 			transition = Utils.getTransitionProperty();
 		} else {
-			transition = Utils.getTransitionProperty({ animationDuration });
+			transition = Utils.getTransitionProperty({
+				animationDuration,
+				animationEasingFunction,
+			});
 		}
 
 		await this.setState({

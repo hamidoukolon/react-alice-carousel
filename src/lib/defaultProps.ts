@@ -14,13 +14,14 @@ export const defaultProps = {
 	autoHeight: false, // 1
 	autoPlay: false, // 1
 	disableAutoPlayOnAction: true, // 1
-	fadeoutAnimation: false, // 1
-	animationDuration: 400, // 1
 	stopAutoPlayOnHover: true, // 1
 	preservePosition: false, // TODO
 	responsive: null, // 1
 	paddingLeft: 0, // 1
 	paddingRight: 0, // 1
+	animationType: 'slide', // 1
+	animationDuration: 400, // 1
+	animationEasingFunction: 'ease', // 1
 	onInitialized: () => undefined, // 1
 	onSlideChange: () => undefined, // 1
 	onSlideChanged: () => undefined, // 1
