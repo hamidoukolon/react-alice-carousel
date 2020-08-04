@@ -62,7 +62,11 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		const { itemsInSlide } = this.state;
 		const { fadeoutAnimation, paddingLeft, paddingRight, autoWidth, autoHeight } = this.props;
 
-		return fadeoutAnimation && itemsInSlide === 1 && !(paddingLeft || paddingRight || autoWidth || autoHeight);
+		return (
+			fadeoutAnimation &&
+			itemsInSlide === 1 &&
+			!(paddingLeft || paddingRight || autoWidth || autoHeight)
+		);
 	}
 
 	slideTo(index: number) {
@@ -70,7 +74,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 		if (this.isFadeoutAnimationAllowed) {
 			const fadeoutAnimationPosition = Utils.getFadeoutAnimationPosition(index, this.state);
-			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(this.state.activeIndex);
+			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(this.state);
 			this._slideToItem(index, fadeoutAnimationIndex, fadeoutAnimationPosition);
 		} else {
 			this._slideToItem(index);
@@ -88,7 +92,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 		if (this.isFadeoutAnimationAllowed) {
 			const fadeoutAnimationPosition = -stageWidth;
-			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(activeIndex);
+			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(this.state);
 			this._slideToItem(prevIndex, fadeoutAnimationIndex, fadeoutAnimationPosition);
 		}
 
@@ -106,7 +110,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 		if (this.isFadeoutAnimationAllowed) {
 			const fadeoutAnimationPosition = stageWidth;
-			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(activeIndex);
+			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(this.state);
 			this._slideToItem(nextIndex, fadeoutAnimationIndex, fadeoutAnimationPosition);
 		}
 		this._slideToItem(nextIndex);
@@ -291,7 +295,9 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	_renderStageItem = (item, i: number) => {
 		const styles = Utils.getStageItemStyles(i, this.state);
 		const className = Utils.getStageItemClassName(i, this.state);
-		return <Views.StageItem styles={styles} className={className} key={`stage-item-${i}`} item={item} />;
+		return (
+			<Views.StageItem styles={styles} className={className} key={`stage-item-${i}`} item={item} />
+		);
 	};
 
 	_renderSlideInfo = () => {
@@ -305,17 +311,23 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 	_renderPrevButton() {
 		const { isPrevSlideDisabled } = Utils.getSlideItemInfo(this.state);
-		return <Views.PrevNextButton name="prev" disabled={isPrevSlideDisabled} onClick={this.slidePrev} />;
+		return (
+			<Views.PrevNextButton name="prev" disabled={isPrevSlideDisabled} onClick={this.slidePrev} />
+		);
 	}
 
 	_renderNextButton() {
 		const { isNextSlideDisabled } = Utils.getSlideItemInfo(this.state);
-		return <Views.PrevNextButton name="next" disabled={isNextSlideDisabled} onClick={this.slideNext} />;
+		return (
+			<Views.PrevNextButton name="next" disabled={isNextSlideDisabled} onClick={this.slideNext} />
+		);
 	}
 
 	_renderPlayPauseButton() {
 		const { isAutoPlaying } = this.state;
-		return <Views.PlayPauseButton isPlaying={isAutoPlaying} onClick={this._handleOnPlayPauseToggle} />;
+		return (
+			<Views.PlayPauseButton isPlaying={isAutoPlaying} onClick={this._handleOnPlayPauseToggle} />
+		);
 	}
 
 	render() {
@@ -333,7 +345,11 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 						onMouseEnter={this._handleOnMouseEnter}
 						onMouseLeave={this._handleOnMouseLeave}
 					>
-						<ul style={stageStyles} className="alice-carousel__stage" ref={this._setStageComponentRef}>
+						<ul
+							style={stageStyles}
+							className="alice-carousel__stage"
+							ref={this._setStageComponentRef}
+						>
 							{clones.map(this._renderStageItem)}
 						</ul>
 					</div>

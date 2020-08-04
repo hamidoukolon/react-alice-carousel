@@ -14,9 +14,8 @@ export default class App extends React.PureComponent<AppProps> {
 					// infinite={true}
 					// fadeoutAnimation={true}
 					// fadeoutAnimation
-					// responsive={{ 0: { items: 2 } }}
+					// responsive={{ 0: { items: 3 } }}
 					animationDuration={800}
-
 					// autoHeight
 					// activeIndex={1}
 					// onSlideChange={console.debug}
@@ -38,6 +37,9 @@ export default class App extends React.PureComponent<AppProps> {
 					</div>
 					<div className="item">
 						<h1>6</h1>
+					</div>
+					<div className="item">
+						<h1>7</h1>
 					</div>
 				</AliceCarousel>
 			</div>

@@ -19,7 +19,7 @@ export type Props = {
 	fadeoutAnimation?: boolean;
 	stopAutoPlayOnHover?: boolean;
 	preservePosition?: boolean;
-	responsive?: Responsive;
+	responsive?: Responsive | null;
 	onInitialized?: (e: EventObject) => void;
 	onSlideChange?: (e: EventObject) => void;
 	onSlideChanged?: (e: EventObject) => void;

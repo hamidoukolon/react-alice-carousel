@@ -11,10 +11,10 @@ export default class Autoheigth extends React.PureComponent<AppProps> {
 				<AliceCarousel
 					paddingLeft={100}
 					paddingRight={10}
-					activeIndex={2}
+					// activeIndex={2}
 					// infinite={true}
 					autoHeight={true}
-					responsive={{ 0: { items: 3 } }}
+					// responsive={{ 0: { items: 3 } }}
 					animationDuration={1000}
 					onSlideChanged={console.debug}
 				>

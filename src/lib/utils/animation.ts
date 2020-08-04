@@ -11,8 +11,9 @@ export function animate(element, options) {
 	return element;
 }
 
-export const getFadeoutAnimationIndex = (currentIndex) => {
-	return currentIndex + 1;
+export const getFadeoutAnimationIndex = (state: State) => {
+	const { infinite, activeIndex, itemsInSlide } = state;
+	return infinite ? activeIndex + itemsInSlide : activeIndex;
 };
 
 export const getFadeoutAnimationPosition = (nextIndex, state: State) => {

@@ -8,7 +8,7 @@ export const defaultProps = {
 	buttonsDisabled: false, // 1
 	playButtonEnabled: false, // 1
 	controlsStrategy: 'default', // 1
-	autoPlayDirection: 'ltr', // 1
+	autoPlayDirection: 'ltr',
 	autoPlayInterval: 400, // 1
 	autoWidth: false, // 1
 	autoHeight: false, // 1
@@ -18,7 +18,7 @@ export const defaultProps = {
 	animationDuration: 400, // 1
 	stopAutoPlayOnHover: true, // 1
 	preservePosition: false, // TODO
-	responsive: {}, // 1
+	responsive: null, // 1
 	paddingLeft: 0, // 1
 	paddingRight: 0, // 1
 	onInitialized: () => undefined, // 1

@@ -1,5 +1,5 @@
 import * as Utils from '.';
-import { Props, State, Responsive } from '../types';
+import { Props, State } from '../types';
 import { getItemsCount } from '.';
 
 export const preserveProps = (prevProps: Props, nextProps: Props) => {
@@ -8,23 +8,19 @@ export const preserveProps = (prevProps: Props, nextProps: Props) => {
 	return preservePosition ? { ...prevProps, activeIndex } : nextProps;
 };
 
-export const getItemsInSlide = (
-	responsiveConfig?: Responsive,
-	itemsCount = 0,
-	autoWidth = false,
-	infinite = false,
-) => {
+export const getItemsInSlide = (itemsCount: number, props: Props) => {
 	let itemsInSlide = 1;
+	const { responsive, autoWidth = false, infinite = false } = props;
 
 	if (autoWidth && infinite) {
 		itemsInSlide = itemsCount;
-	} else if (responsiveConfig) {
-		const configKeys = Object.keys(responsiveConfig);
+	} else if (responsive) {
+		const configKeys = Object.keys(responsive);
 
 		if (configKeys.length) {
 			configKeys.forEach((key) => {
 				if (Number(key) < window.innerWidth) {
-					itemsInSlide = Math.min(responsiveConfig[key].items, itemsCount) || itemsInSlide;
+					itemsInSlide = Math.min(responsive[key].items, itemsCount) || itemsInSlide;
 				}
 			});
 		}
@@ -33,11 +29,11 @@ export const getItemsInSlide = (
 };
 
 export const calculateInitialProps = (props: Props, el): State => {
-	const { responsive, infinite, autoPlay, autoWidth = false, paddingLeft, paddingRight } = props;
+	const { infinite, autoPlay, autoWidth = false } = props;
 	const transition = Utils.getTransitionProperty();
 	const itemsCount = getItemsCount(props);
 	const itemsOffset = Utils.getItemsOffset(props);
-	const itemsInSlide = getItemsInSlide(responsive, itemsCount, autoWidth, infinite);
+	const itemsInSlide = getItemsInSlide(itemsCount, props);
 	const activeIndex = Utils.getStartIndex(props.activeIndex, itemsCount);
 	const { width: stageWidth } = Utils.getElementDimensions(el);
 

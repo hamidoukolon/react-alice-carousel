@@ -11,15 +11,25 @@ export const getItemsCount = (props: Props) => {
 };
 
 export const getItemsOffset = (props: Props) => {
-	return props.paddingRight || props.paddingLeft ? 1 : 0;
+	const { infinite, paddingRight, paddingLeft } = props;
+	// TODO !infinite
+	if (infinite && (paddingLeft || paddingRight)) {
+		return 1;
+	}
+	return 0;
 };
 
 export const createClones = (props: Props) => {
-	const { responsive, autoWidth, infinite } = props;
 	const slides = getSlides(props);
+
+	// TODO !infinite
+	if (!props.infinite) {
+		return slides;
+	}
+
 	const itemsCount = getItemsCount(props);
 	const itemsOffset = getItemsOffset(props);
-	const itemsInSlide = Utils.getItemsInSlide(responsive, itemsCount, autoWidth, infinite);
+	const itemsInSlide = Utils.getItemsInSlide(itemsCount, props);
 	const cursor = Math.min(itemsInSlide, itemsCount) + itemsOffset;
 	const clonesAfter = slides.slice(0, cursor);
 	const clonesBefore = slides.slice(-cursor);
@@ -104,7 +114,10 @@ export const getAutoHeightProperty = (stageComponent: Element, props: Props, sta
 
 export const getElementCursor = (props: Props, state: State) => {
 	const { activeIndex, itemsInSlide } = state;
-	return activeIndex + itemsInSlide + Utils.getItemsOffset(props);
+	if (props.infinite) {
+		return activeIndex + itemsInSlide + Utils.getItemsOffset(props);
+	}
+	return activeIndex;
 };
 
 export const getElementFirstChild = (stageComponent, cursor) => {

@@ -51,9 +51,10 @@ export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
 	const { itemsOffset = 0, itemsInSlide = 0, sizesGrid = [], infinite, autoWidth } = state;
 	let cursor = nextIndex + itemsOffset + itemsInSlide;
 
-	// if (!infinite) {
-	// 	cursor = nextIndex + itemsOffset;
-	// }
+	// TODO !infinite
+	if (!infinite) {
+		cursor = nextIndex;
+	}
 
 	if (autoWidth && infinite) {
 		cursor = nextIndex + itemsInSlide;

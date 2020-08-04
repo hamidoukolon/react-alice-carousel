@@ -13,26 +13,31 @@ export const isActiveItem = (i = 0, state: State) => {
 	const { activeIndex, itemsInSlide, itemsOffset, infinite, autoWidth } = state;
 
 	if (infinite && autoWidth) {
-		return i - itemsInSlide === activeIndex + itemsOffset;
+		return i - itemsInSlide + itemsOffset === activeIndex + itemsOffset;
 	}
 
 	const index = activeIndex + itemsInSlide + itemsOffset;
 
-	// if (!infinite) {
-	// 	return i >= index && i < index;
-	// }
+	// TODO !infinite
+	if (!infinite) {
+		return i >= activeIndex && i < index;
+	}
 
 	return i >= index && i < index + itemsInSlide;
 };
 
 export const isClonedItem = (i = 0, state: State) => {
-	const { itemsInSlide, itemsOffset, itemsCount, infinite } = state;
+	const { itemsInSlide, itemsOffset, itemsCount, infinite, autoWidth } = state;
 
-	// if (!infinite) {
-	// 	return false;
-	// }
+	if (!infinite) {
+		return false;
+	}
+
+	if (infinite && autoWidth) {
+		return i < itemsInSlide || i > itemsCount - 1 + itemsInSlide;
+	}
 
 	const index = itemsInSlide + itemsOffset;
 
-	return i < index || i > itemsCount + index - 1;
+	return i < index || i > itemsCount - 1 + index;
 };

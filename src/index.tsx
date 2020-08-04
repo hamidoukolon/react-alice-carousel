@@ -6,4 +6,4 @@ import Autoheigth from './components/autoheigth';
 import Autowidth from './components/autowidth';
 
 // ReactDOM.render(<Autowidth />, document.getElementById('root'));
-ReactDOM.render(<Autowidth />, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));
