@@ -159,7 +159,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		const { activeIndex, itemsCount, fadeoutAnimationProcessing } = this.state;
 
 		if (Utils.shouldRecalculateSlideIndex(activeIndex, itemsCount)) {
-			const nextIndex = Utils.getNextSlideIndex(activeIndex, itemsCount);
+			const nextIndex = Utils.getUpdateSlidePositionIndex(activeIndex, itemsCount);
 			await this._handleUpdateSlidePosition(nextIndex);
 		}
 

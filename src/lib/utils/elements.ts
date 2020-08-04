@@ -18,12 +18,9 @@ export const createClones = (props: Props) => {
 	const { responsive, autoWidth, infinite } = props;
 	const slides = getSlides(props);
 	const itemsCount = getItemsCount(props);
-	let itemsInSlide = Utils.getItemsInSlide(responsive, itemsCount);
-
-	if (autoWidth && infinite) {
-		itemsInSlide = itemsCount;
-	}
-	const cursor = Math.min(itemsInSlide, itemsCount) + getItemsOffset(props);
+	const itemsOffset = getItemsOffset(props);
+	const itemsInSlide = Utils.getItemsInSlide(responsive, itemsCount, autoWidth, infinite);
+	const cursor = Math.min(itemsInSlide, itemsCount) + itemsOffset;
 	const clonesAfter = slides.slice(0, cursor);
 	const clonesBefore = slides.slice(-cursor);
 
@@ -49,7 +46,10 @@ export const createAutoWidthGrid = (el) => {
 			const { width = 0 } = getElementDimensions(child?.firstChild);
 
 			if (previewsChild) {
-				position = previewsChildCursor === 0 ? previewsChild.width : previewsChild.width + previewsChild.position;
+				position =
+					previewsChildCursor === 0
+						? previewsChild.width
+						: previewsChild.width + previewsChild.position;
 			}
 
 			acc.push({ position, width });

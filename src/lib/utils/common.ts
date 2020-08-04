@@ -10,21 +10,21 @@ export const preserveProps = (prevProps: Props, nextProps: Props) => {
 
 export const getItemsInSlide = (
 	responsiveConfig?: Responsive,
-	childrenLength = 0,
+	itemsCount = 0,
 	autoWidth = false,
 	infinite = false,
 ) => {
 	let itemsInSlide = 1;
 
 	if (autoWidth && infinite) {
-		itemsInSlide = childrenLength;
+		itemsInSlide = itemsCount;
 	} else if (responsiveConfig) {
 		const configKeys = Object.keys(responsiveConfig);
 
 		if (configKeys.length) {
 			configKeys.forEach((key) => {
 				if (Number(key) < window.innerWidth) {
-					itemsInSlide = Math.min(responsiveConfig[key].items, childrenLength) || itemsInSlide;
+					itemsInSlide = Math.min(responsiveConfig[key].items, itemsCount) || itemsInSlide;
 				}
 			});
 		}
@@ -33,7 +33,7 @@ export const getItemsInSlide = (
 };
 
 export const calculateInitialProps = (props: Props, el): State => {
-	const { responsive, infinite, autoPlay, autoWidth = false } = props;
+	const { responsive, infinite, autoPlay, autoWidth = false, paddingLeft, paddingRight } = props;
 	const transition = Utils.getTransitionProperty();
 	const itemsCount = getItemsCount(props);
 	const itemsOffset = Utils.getItemsOffset(props);
@@ -46,7 +46,13 @@ export const calculateInitialProps = (props: Props, el): State => {
 	const sizesFixedGrid = Utils.createFixedWidthGrid(clones, stageWidth, itemsInSlide);
 	const sizesGrid = autoWidth ? sizesAutoGrid : sizesFixedGrid;
 
-	const translate3d = Utils.getTranslate3dProperty(activeIndex, { itemsInSlide, itemsOffset, sizesGrid });
+	const translate3d = Utils.getTranslate3dProperty(activeIndex, {
+		itemsInSlide,
+		itemsOffset,
+		sizesGrid,
+		autoWidth,
+		infinite,
+	});
 
 	return {
 		autoWidth,

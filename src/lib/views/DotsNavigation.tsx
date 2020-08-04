@@ -6,7 +6,7 @@ import { State } from '../types';
 export const DotsNavigation = ({ state, onClick, onMouseEnter, onMouseLeave }: Props) => {
 	const { itemsCount, itemsInSlide, infinite, autoWidth, activeIndex } = state;
 	const { isNextSlideDisabled } = Utils.getSlideItemInfo(state);
-	const dotsLength = Utils.getDotsNavigationLength(itemsCount, itemsInSlide, infinite, autoWidth);
+	const dotsLength = Utils.getDotsNavigationLength(itemsCount, itemsInSlide, autoWidth);
 
 	return (
 		<ul className="alice-carousel__dots">
@@ -18,7 +18,7 @@ export const DotsNavigation = ({ state, onClick, onMouseEnter, onMouseLeave }: P
 					let nextIndex = getItemIndexForDotNavigation(i, isTheLastDotIndex, itemsCount, itemsInSlide);
 					let currentIndex = Utils.getActiveSlideIndex(isNextSlideDisabled, state);
 
-					if (infinite && autoWidth) {
+					if (autoWidth) {
 						currentIndex = activeIndex;
 
 						if (activeIndex < 0) {

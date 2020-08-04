@@ -48,8 +48,17 @@ export const getStageItemStyles = (i: number, state: State) => {
 };
 
 export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
-	const { itemsOffset = 0, itemsInSlide = 0, sizesGrid = [] } = state;
-	const cursor = nextIndex + itemsOffset + itemsInSlide;
+	const { itemsOffset = 0, itemsInSlide = 0, sizesGrid = [], infinite, autoWidth } = state;
+	let cursor = nextIndex + itemsOffset + itemsInSlide;
+
+	// if (!infinite) {
+	// 	cursor = nextIndex + itemsOffset;
+	// }
+
+	if (autoWidth && infinite) {
+		cursor = nextIndex + itemsInSlide;
+	}
+
 	const { position } = sizesGrid[cursor] || {};
 
 	return position;
