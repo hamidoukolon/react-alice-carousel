@@ -29,7 +29,9 @@ export const getItemsInSlide = (itemsCount: number, props: Props) => {
 };
 
 export const calculateInitialProps = (props: Props, el): State => {
-	const { infinite, autoPlay, autoWidth = false } = props;
+	let transformationSet;
+	const { animationDuration, infinite = false, autoPlay = false, autoWidth = false } = props;
+	const clones = Utils.createClones(props);
 	const transition = Utils.getTransitionProperty();
 	const itemsCount = getItemsCount(props);
 	const itemsOffset = Utils.getItemsOffset(props);
@@ -37,34 +39,35 @@ export const calculateInitialProps = (props: Props, el): State => {
 	const activeIndex = Utils.getStartIndex(props.activeIndex, itemsCount);
 	const { width: stageWidth } = Utils.getElementDimensions(el);
 
-	const clones = Utils.createClones(props);
-	const sizesAutoGrid = Utils.createAutoWidthGrid(el);
-	const sizesFixedGrid = Utils.createFixedWidthGrid(clones, stageWidth, itemsInSlide);
-	const sizesGrid = autoWidth ? sizesAutoGrid : sizesFixedGrid;
+	if (autoWidth) {
+		transformationSet = Utils.createAutowidthTransformationSet(el);
+	} else {
+		transformationSet = Utils.createDefaultTransformationSet(clones, stageWidth, itemsInSlide);
+	}
 
 	const translate3d = Utils.getTranslate3dProperty(activeIndex, {
 		itemsInSlide,
 		itemsOffset,
-		sizesGrid,
+		transformationSet,
 		autoWidth,
 		infinite,
 	});
 
 	return {
-		autoWidth,
 		activeIndex,
-		itemsCount,
-		itemsOffset,
-		itemsInSlide,
+		autoWidth,
+		animationDuration,
 		clones,
 		infinite,
+		itemsCount,
+		itemsInSlide,
+		itemsOffset,
 		translate3d,
-		sizesGrid,
 		stageWidth,
 		initialStageHeight: 0,
 		isAutoPlaying: Boolean(autoPlay),
 		isAutoPlayCanceledOnAction: false,
-		animationDuration: props.animationDuration,
+		transformationSet,
 		transition,
 		fadeoutAnimationIndex: null,
 		fadeoutAnimationPosition: null,

@@ -26,20 +26,19 @@ export const getRenderStageStyles = (nextStyles, currentStyles: Style): Style =>
 	return { ...currentStyles, transform };
 };
 
-export const getStageItemStyles = (i: number, state: State) => {
+export const getRenderStageItemStyles = (i: number, state: State) => {
 	const {
-		sizesGrid,
+		transformationSet,
 		fadeoutAnimationIndex,
 		fadeoutAnimationPosition,
 		fadeoutAnimationProcessing,
 		animationDuration,
 	} = state;
-	const { width } = sizesGrid[i] || {};
+	const { width } = transformationSet[i] || {};
 
 	if (fadeoutAnimationProcessing && fadeoutAnimationIndex === i) {
 		return {
 			transform: `translateX(${fadeoutAnimationPosition}px)`,
-			// TODO
 			animationDuration: `${animationDuration}ms`,
 			width: `${width}px`,
 		};
@@ -49,7 +48,7 @@ export const getStageItemStyles = (i: number, state: State) => {
 };
 
 export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
-	const { itemsOffset = 0, itemsInSlide = 0, sizesGrid = [], infinite, autoWidth } = state;
+	const { autoWidth, infinite, itemsOffset = 0, itemsInSlide = 0, transformationSet = [] } = state;
 	let cursor = nextIndex + itemsOffset + itemsInSlide;
 
 	// TODO !infinite
@@ -61,44 +60,7 @@ export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
 		cursor = nextIndex + itemsInSlide;
 	}
 
-	const { position } = sizesGrid[cursor] || {};
+	const { position } = transformationSet[cursor] || {};
 
 	return position;
 };
-
-// TODO
-// export const getTranslatePosition = (nextIndex, state: Partial<State>) => {
-// 	const { itemsOffset = 0, itemsInSlide = 0, sizesGrid = [] } = state;
-// 	const cursor = nextIndex + itemsOffset + itemsInSlide;
-// 	const { position } = sizesGrid[cursor] || {};
-//
-// 	return position;
-// };
-//
-// export const getTranslatePositionAutoWidth = (nextIndex, state: Partial<State>) => {
-// 	const { infinite, itemsOffset = 0, itemsInSlide = 0, sizesGrid = [], stageWidth = 0, itemsCount = 0 } = state;
-// 	const cursor = nextIndex + itemsOffset + itemsInSlide;
-// 	const { position } = sizesGrid[cursor] || {};
-//
-// 	if (infinite) {
-// 		return position;
-// 	}
-//
-// 	const limit = getAutoWidthTranslatePositionLimit(sizesGrid, cursor);
-//
-// 	if (stageWidth < limit) {
-// 		const { position } = sizesGrid[itemsCount + itemsOffset + itemsInSlide] || {};
-// 		return Math.ceil(position) - stageWidth;
-// 	}
-//
-// 	return position;
-// };
-//
-// export const getAutoWidthTranslatePositionLimit = (sizesGrid, cursor) => {
-// 	return sizesGrid.reduce((acc, { position }, index) => {
-// 		if (index <= cursor) {
-// 			acc += position;
-// 		}
-// 		return acc;
-// 	}, 0);
-// };

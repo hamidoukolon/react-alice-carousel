@@ -27,12 +27,12 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			itemsCount,
 			itemsOffset: 0,
 			itemsInSlide: 1,
+			transformationSet: [],
 			infinite: false,
 			initialStageHeight: 0,
 			isAutoPlaying: false,
 			isAutoPlayCanceledOnAction: false,
 			translate3d: 0,
-			sizesGrid: [],
 			animationDuration: 0,
 			transition: Utils.getTransitionProperty(),
 			fadeoutAnimationIndex: null,
@@ -296,8 +296,8 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	}
 
 	_renderStageItem = (item, i: number) => {
-		const styles = Utils.getStageItemStyles(i, this.state);
-		const className = Utils.getStageItemClassName(i, this.state);
+		const styles = Utils.getRenderStageItemStyles(i, this.state);
+		const className = Utils.getRenderStageItemClasses(i, this.state);
 		return (
 			<Views.StageItem styles={styles} className={className} key={`stage-item-${i}`} item={item} />
 		);

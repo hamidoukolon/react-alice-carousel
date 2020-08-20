@@ -1,5 +1,8 @@
 export type Props = {
 	activeIndex?: number;
+	animationType?: 'slide' | 'fadeout' | string; //
+	animationDuration?: number;
+	animationEasingFunction?: string;
 	items?: any[];
 	children?: any[];
 	infinite?: boolean;
@@ -22,9 +25,6 @@ export type Props = {
 	onInitialized?: (e: EventObject) => void;
 	onSlideChange?: (e: EventObject) => void;
 	onSlideChanged?: (e: EventObject) => void;
-	animationType?: 'slide' | 'fadeout' | string; //
-	animationDuration?: number;
-	animationEasingFunction?: string;
 };
 
 export type State = {
@@ -38,7 +38,6 @@ export type State = {
 	translate3d: number;
 	itemsOffset: number;
 	stageWidth: number;
-	sizesGrid: GirdCell[];
 	initialStageHeight: number;
 	animationDuration?: number;
 	transition: string;
@@ -46,6 +45,7 @@ export type State = {
 	fadeoutAnimationIndex: number | null;
 	fadeoutAnimationPosition: number | null;
 	fadeoutAnimationProcessing: boolean;
+	transformationSet: TransformationItem[];
 };
 
 export type Style = {
@@ -77,7 +77,7 @@ export type RootComponent = {
 	height?: number;
 };
 
-export type GirdCell = {
+export type TransformationItem = {
 	width: number;
 	position: number;
 };

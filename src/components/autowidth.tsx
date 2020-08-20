@@ -12,32 +12,33 @@ export default class Autowidth extends React.PureComponent<AppProps> {
 					//
 					paddingLeft={100}
 					paddingRight={50}
-					activeIndex={6}
+					activeIndex={0}
 					infinite={true}
 					autoWidth={true}
-					responsive={{ 0: { items: 10 } }}
+					// responsive={{ 0: { items: 10 } }}
 					// animationDuration={10000}
+					animationEasingFunction={'cubic-bezier(0, 0, 0, 1)'}
 					onSlideChanged={console.debug}
 				>
-					<div className="item">
+					<div className="item" style={{ width: 15 }}>
 						<h1>1</h1>
 					</div>
-					<div className="item">
+					<div className="item" style={{ width: 10 }}>
 						<h1>2</h1>
 					</div>
-					<div className="item" style={{ width: 120 }}>
+					<div className="item" style={{ width: 20 }}>
 						<h1>3</h1>
 					</div>
-					<div className="item" style={{ width: 140 }}>
+					<div className="item" style={{ width: 40 }}>
 						<h1>4</h1>
 					</div>
-					<div className="item">
+					<div className="item" style={{ width: 30 }}>
 						<h1>5</h1>
 					</div>
-					<div className="item" style={{ width: 170 }}>
+					<div className="item" style={{ width: 10 }}>
 						<h1>6</h1>
 					</div>
-					<div className="item" style={{ width: 170 }}>
+					<div className="item" style={{ width: 17 }}>
 						<h1>7</h1>
 					</div>
 				</AliceCarousel>

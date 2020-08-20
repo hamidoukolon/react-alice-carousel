@@ -9,8 +9,8 @@ export default class Autoheigth extends React.PureComponent<AppProps> {
 			<div className="app">
 				<h1 className="h1">React Alice Carousel</h1>
 				<AliceCarousel
-					paddingLeft={100}
-					paddingRight={10}
+					//paddingLeft={100}
+					//paddingRight={10}
 					// activeIndex={2}
 					// infinite={true}
 					autoHeight={true}

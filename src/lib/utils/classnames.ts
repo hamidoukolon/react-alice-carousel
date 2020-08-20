@@ -1,6 +1,6 @@
 import { State } from '../types';
 
-export const getStageItemClassName = (i = 0, state: State) => {
+export const getRenderStageItemClasses = (i = 0, state: State) => {
 	const { fadeoutAnimationIndex } = state;
 	const isActive = isActiveItem(i, state) ? ' __active' : '';
 	const isCloned = isClonedItem(i, state) ? ' __cloned' : '';

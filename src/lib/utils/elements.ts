@@ -1,5 +1,5 @@
 import * as Utils from '.';
-import { GirdCell, Props, State } from '../types';
+import { TransformationItem, Props, State } from '../types';
 
 export const getSlides = (props: Props) => {
 	const { children = [], items = [] } = props;
@@ -45,11 +45,11 @@ export const isElement = (element) => {
 	}
 };
 
-export const createAutoWidthGrid = (el) => {
+export const createAutowidthTransformationSet = (el) => {
 	if (isElement(el)) {
 		const children: HTMLElement[] = Array.from(el.children || []);
 
-		return children.reduce<GirdCell[]>((acc, child, i) => {
+		return children.reduce<TransformationItem[]>((acc, child, i) => {
 			let position = 0;
 			const previewsChildCursor = i - 1;
 			const previewsChild = acc[previewsChildCursor];
@@ -70,10 +70,14 @@ export const createAutoWidthGrid = (el) => {
 	return [];
 };
 
-export const createFixedWidthGrid = (children, galleryWidth: number, itemsInSlide: number) => {
+export const createDefaultTransformationSet = (
+	children: unknown[],
+	galleryWidth: number,
+	itemsInSlide: number,
+) => {
 	const width = getItemWidth(galleryWidth, itemsInSlide);
 
-	return children.reduce((acc, child, i) => {
+	return children.reduce<TransformationItem[]>((acc, child, i) => {
 		let position = 0;
 		const previewsChild = acc[i - 1];
 
@@ -83,7 +87,7 @@ export const createFixedWidthGrid = (children, galleryWidth: number, itemsInSlid
 
 		acc.push({ width, position });
 		return acc;
-	}, [] as GirdCell[]);
+	}, []);
 };
 
 export const getItemWidth = (galleryWidth: number, itemsInSlide: number) => {
