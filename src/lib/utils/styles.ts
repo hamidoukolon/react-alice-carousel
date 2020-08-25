@@ -3,7 +3,7 @@ import { Props, State, Style, Transition } from '../types';
 
 export const getRenderWrapperStyles = (props: Props, state: State, element) => {
 	const { paddingLeft, paddingRight, autoHeight, animationDuration } = props || {};
-	const height = autoHeight ? Utils.getAutoHeightProperty(element, props, state) : undefined;
+	const height = autoHeight ? Utils.getAutoheightProperty(element, props, state) : undefined;
 	const transition = height ? `height ${animationDuration}ms` : undefined;
 
 	return {
@@ -57,7 +57,7 @@ export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
 	}
 
 	if (autoWidth && infinite) {
-		cursor = nextIndex + itemsInSlide;
+		cursor = nextIndex + itemsInSlide + itemsOffset;
 	}
 
 	const { position } = transformationSet[cursor] || {};

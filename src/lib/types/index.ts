@@ -1,6 +1,6 @@
 export type Props = {
 	activeIndex?: number;
-	animationType?: 'slide' | 'fadeout' | string; //
+	animationType?: 'slide' | 'fadeout' | string;
 	animationDuration?: number;
 	animationEasingFunction?: string;
 	items?: any[];
@@ -13,7 +13,6 @@ export type Props = {
 	autoPlayInterval?: number;
 	autoPlayDirection?: string | 'ltr' | 'rtl';
 	controlsStrategy?: string | 'default' | 'responsive';
-	disableAutoPlayOnAction?: boolean;
 	paddingLeft?: number;
 	paddingRight?: number;
 	autoWidth?: boolean;
@@ -25,6 +24,12 @@ export type Props = {
 	onInitialized?: (e: EventObject) => void;
 	onSlideChange?: (e: EventObject) => void;
 	onSlideChanged?: (e: EventObject) => void;
+	swipeDelta?: number;
+	swipeExtraPadding?: number;
+	mouseTrackingEnabled?: boolean;
+	touchTrackingEnabled?: boolean;
+	preventAutoPlayOnAction?: boolean;
+	preventEventOnTouchMove?: boolean;
 };
 
 export type State = {
@@ -38,14 +43,20 @@ export type State = {
 	translate3d: number;
 	itemsOffset: number;
 	stageWidth: number;
+	stageContentWidth: number;
 	initialStageHeight: number;
 	animationDuration?: number;
 	transition: string;
 	isAutoPlayCanceledOnAction: boolean;
+	isStageContentPartial: boolean;
 	fadeoutAnimationIndex: number | null;
 	fadeoutAnimationPosition: number | null;
 	fadeoutAnimationProcessing: boolean;
-	transformationSet: TransformationItem[];
+	transformationSet: TransformationSetItem[];
+	swipeLimitMin: number;
+	swipeLimitMax: number;
+	swipeAllowedPositionMax: number;
+	swipeShiftValue: number;
 };
 
 export type Style = {
@@ -77,7 +88,7 @@ export type RootComponent = {
 	height?: number;
 };
 
-export type TransformationItem = {
+export type TransformationSetItem = {
 	width: number;
 	position: number;
 };

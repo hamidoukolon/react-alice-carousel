@@ -9,6 +9,7 @@ html {
 	max-width: 800px;
 	width: 100%;
 	margin: auto;
+	overflow-x: hidden;
 
 	font-family: Arial, Helvetica, sans-serif;
 }
@@ -51,4 +52,11 @@ html {
 			vertical-align: middle;
 		}
 	}
+	.__mod {
+		background-color: #aaa;
+	}
+	.__mod-2 {
+		background-color: #555;
+	}
 }
+

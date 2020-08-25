@@ -44,6 +44,7 @@
     "strict": 2,
     "prefer-rest-params": 0,
     "no-unused-vars": 1,
+    "no-self-assign": 0,
     "no-underscore-dangle": 0,
     "no-use-before-define": 0,
     "no-extra-boolean-cast": 0,

@@ -1,5 +1,5 @@
 import * as Utils from '.';
-import { TransformationItem, Props, State } from '../types';
+import { TransformationSetItem, Props, State } from '../types';
 
 export const getSlides = (props: Props) => {
 	const { children = [], items = [] } = props;
@@ -31,8 +31,17 @@ export const createClones = (props: Props) => {
 	const itemsOffset = getItemsOffset(props);
 	const itemsInSlide = Utils.getItemsInSlide(itemsCount, props);
 	const cursor = Math.min(itemsInSlide, itemsCount) + itemsOffset;
+
 	const clonesAfter = slides.slice(0, cursor);
 	const clonesBefore = slides.slice(-cursor);
+
+	if (itemsOffset && itemsInSlide === itemsCount) {
+		const afterOffsetClone = slides[0];
+		const beforeOffsetClone = slides.slice(-1);
+
+		clonesBefore.unshift(beforeOffsetClone);
+		clonesAfter.push(afterOffsetClone);
+	}
 
 	return clonesBefore.concat(slides, clonesAfter);
 };
@@ -49,7 +58,7 @@ export const createAutowidthTransformationSet = (el) => {
 	if (isElement(el)) {
 		const children: HTMLElement[] = Array.from(el.children || []);
 
-		return children.reduce<TransformationItem[]>((acc, child, i) => {
+		return children.reduce<TransformationSetItem[]>((acc, child, i) => {
 			let position = 0;
 			const previewsChildCursor = i - 1;
 			const previewsChild = acc[previewsChildCursor];
@@ -77,7 +86,7 @@ export const createDefaultTransformationSet = (
 ) => {
 	const width = getItemWidth(galleryWidth, itemsInSlide);
 
-	return children.reduce<TransformationItem[]>((acc, child, i) => {
+	return children.reduce<TransformationSetItem[]>((acc, child, i) => {
 		let position = 0;
 		const previewsChild = acc[i - 1];
 
@@ -103,7 +112,7 @@ export function getElementDimensions(element) {
 	return {};
 }
 
-export const getAutoHeightProperty = (stageComponent: Element, props: Props, state: State) => {
+export const getAutoheightProperty = (stageComponent: Element, props: Props, state: State) => {
 	const elementCursor = getElementCursor(props, state);
 	const element = getElementFirstChild(stageComponent, elementCursor);
 

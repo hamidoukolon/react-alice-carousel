@@ -24,6 +24,7 @@ $play-btn-size: 32px !default;
   overflow: hidden;
   width: 100%;
   height: auto;
+  box-sizing: border-box;
 }
 
 .alice-carousel__stage {

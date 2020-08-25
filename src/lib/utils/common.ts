@@ -2,12 +2,6 @@ import * as Utils from '.';
 import { Props, State } from '../types';
 import { getItemsCount } from '.';
 
-export const preserveProps = (prevProps: Props, nextProps: Props) => {
-	const { preservePosition } = prevProps || {};
-	const { activeIndex } = nextProps || {};
-	return preservePosition ? { ...prevProps, activeIndex } : nextProps;
-};
-
 export const getItemsInSlide = (itemsCount: number, props: Props) => {
 	let itemsInSlide = 1;
 	const { responsive, autoWidth = false, infinite = false } = props;
@@ -30,7 +24,13 @@ export const getItemsInSlide = (itemsCount: number, props: Props) => {
 
 export const calculateInitialProps = (props: Props, el): State => {
 	let transformationSet;
-	const { animationDuration, infinite = false, autoPlay = false, autoWidth = false } = props;
+	const {
+		animationDuration,
+		infinite = false,
+		autoPlay = false,
+		autoWidth = false,
+		swipeExtraPadding = 0,
+	} = props;
 	const clones = Utils.createClones(props);
 	const transition = Utils.getTransitionProperty();
 	const itemsCount = getItemsCount(props);
@@ -44,6 +44,12 @@ export const calculateInitialProps = (props: Props, el): State => {
 	} else {
 		transformationSet = Utils.createDefaultTransformationSet(clones, stageWidth, itemsInSlide);
 	}
+
+	const { position, width } = Utils.getTransformationSetItem(-itemsInSlide, transformationSet);
+	const stageContentWidth = position + width;
+	const isStageContentPartial = stageWidth >= stageContentWidth;
+
+	const swipeShiftValue = Utils.getSwipeShiftValue(itemsCount, transformationSet);
 
 	const translate3d = Utils.getTranslate3dProperty(activeIndex, {
 		itemsInSlide,
@@ -64,7 +70,9 @@ export const calculateInitialProps = (props: Props, el): State => {
 		itemsOffset,
 		translate3d,
 		stageWidth,
+		stageContentWidth,
 		initialStageHeight: 0,
+		isStageContentPartial,
 		isAutoPlaying: Boolean(autoPlay),
 		isAutoPlayCanceledOnAction: false,
 		transformationSet,
@@ -72,5 +80,9 @@ export const calculateInitialProps = (props: Props, el): State => {
 		fadeoutAnimationIndex: null,
 		fadeoutAnimationPosition: null,
 		fadeoutAnimationProcessing: false,
+		swipeLimitMin: Number(swipeExtraPadding),
+		swipeLimitMax: position + swipeExtraPadding,
+		swipeAllowedPositionMax: position,
+		swipeShiftValue,
 	};
 };

@@ -10,35 +10,36 @@ export default class Autowidth extends React.PureComponent<AppProps> {
 				<h1 className="h1">React Alice Carousel</h1>
 				<AliceCarousel
 					//
-					paddingLeft={100}
-					paddingRight={50}
+					paddingLeft={40}
+					paddingRight={40}
 					activeIndex={0}
-					infinite={true}
+					// infinite={true}
 					autoWidth={true}
 					// responsive={{ 0: { items: 10 } }}
 					// animationDuration={10000}
 					animationEasingFunction={'cubic-bezier(0, 0, 0, 1)'}
 					onSlideChanged={console.debug}
+					touchTrackingEnabled={true}
 				>
-					<div className="item" style={{ width: 15 }}>
+					<div className="item" style={{ width: 50 }}>
 						<h1>1</h1>
 					</div>
-					<div className="item" style={{ width: 10 }}>
+					<div className="item" style={{ width: 60 }}>
 						<h1>2</h1>
 					</div>
-					<div className="item" style={{ width: 20 }}>
+					<div className="item" style={{ width: 70 }}>
 						<h1>3</h1>
 					</div>
-					<div className="item" style={{ width: 40 }}>
+					<div className="item" style={{ width: 80 }}>
 						<h1>4</h1>
 					</div>
-					<div className="item" style={{ width: 30 }}>
+					<div className="item" style={{ width: 90 }}>
 						<h1>5</h1>
 					</div>
-					<div className="item" style={{ width: 10 }}>
+					<div className="item" style={{ width: 100 }}>
 						<h1>6</h1>
 					</div>
-					<div className="item" style={{ width: 17 }}>
+					<div className="item" style={{ width: 120 }}>
 						<h1>7</h1>
 					</div>
 				</AliceCarousel>

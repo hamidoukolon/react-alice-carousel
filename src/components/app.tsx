@@ -9,38 +9,26 @@ export default class App extends React.PureComponent<AppProps> {
 			<div className="app">
 				<h1 className="h1">React Alice Carousel</h1>
 				<AliceCarousel
-					paddingLeft={100}
-					paddingRight={50}
-					infinite={true}
+					paddingLeft={40}
+					paddingRight={30}
+					// infinite={true}
 					// animationType="fadeout"
-					// fadeoutAnimation
 					responsive={{ 0: { items: 3 } }}
 					animationDuration={400}
+					touchTrackingEnabled={true}
 					// animationEasingFunction={'cubic-bezier(0, 0, 0, 1)'}
 					// autoHeight
-					// activeIndex={1}
+					activeIndex={0}
 					// onSlideChange={console.debug}
 				>
 					<div className="item">
-						<h1>1</h1>
+						<h1 className="__mod">1</h1>
 					</div>
 					<div className="item">
-						<h1>2</h1>
+						<h1 className="__mod-2">2</h1>
 					</div>
 					<div className="item">
 						<h1>3</h1>
-					</div>
-					<div className="item">
-						<h1>4</h1>
-					</div>
-					<div className="item">
-						<h1>5</h1>
-					</div>
-					<div className="item">
-						<h1>6</h1>
-					</div>
-					<div className="item">
-						<h1>7</h1>
 					</div>
 				</AliceCarousel>
 			</div>

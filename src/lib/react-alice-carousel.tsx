@@ -1,4 +1,5 @@
 import React from 'react';
+import VS, { EventData } from 'vanilla-swipe';
 import { defaultProps } from './defaultProps';
 import { Props, State, RootComponent } from './types';
 import * as Views from './views';
@@ -6,13 +7,18 @@ import * as Utils from './utils';
 
 class AliceCarousel extends React.PureComponent<Props, State> {
 	static defaultProps: Props = defaultProps;
-	isHovered: boolean;
-	isAnimationDisabled: boolean;
-	hasUserAction: boolean;
-	autoPlayIntervalId: undefined | number;
-	rootComponent: React.RefObject<HTMLDivElement> | undefined;
-	rootComponentDimensions: RootComponent;
-	stageComponent: React.RefObject<HTMLDivElement> | undefined;
+	private swipeListener: VS | null = null;
+	private isAnimationDisabled: boolean;
+	private isHovered: boolean;
+	private isTouchMoveProcess: boolean;
+	private hasUserAction: boolean;
+	private autoPlayIntervalId: undefined | number;
+	private lastSwipePosition: undefined | number;
+	private lastSwipeDirection: undefined | string;
+	private rootComponent: null | undefined;
+	private rootComponentDimensions: RootComponent;
+	private stageComponent: null | undefined;
+	private _throttledOnTouchMove: () => void | undefined;
 
 	constructor(props) {
 		super(props);
@@ -32,6 +38,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			initialStageHeight: 0,
 			isAutoPlaying: false,
 			isAutoPlayCanceledOnAction: false,
+			isStageContentPartial: false,
 			translate3d: 0,
 			animationDuration: 0,
 			transition: Utils.getTransitionProperty(),
@@ -39,22 +46,34 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			fadeoutAnimationPosition: null,
 			fadeoutAnimationProcessing: false,
 			stageWidth: 0,
+			stageContentWidth: 0,
+			swipeLimitMin: 0,
+			swipeLimitMax: 0,
+			swipeAllowedPositionMax: 0,
+			swipeShiftValue: 0,
 		};
 
 		this.isHovered = false;
 		this.isAnimationDisabled = false;
+		this.isTouchMoveProcess = false;
 		this.hasUserAction = false;
 		this.rootComponent = undefined;
+		this.lastSwipePosition = undefined;
+		this.lastSwipeDirection = undefined;
 		this.rootComponentDimensions = {};
 		this.stageComponent = undefined;
 		this.slideTo = this.slideTo.bind(this);
 		this.slidePrev = this.slidePrev.bind(this);
 		this.slideNext = this.slideNext.bind(this);
+		this._onTouchMove = this._onTouchMove.bind(this);
+		this._onTouchEnd = this._onTouchEnd.bind(this);
 		this._handleOnDotClick = this._handleOnDotClick.bind(this);
+		this._throttledOnTouchMove = Utils.throttle(this._onTouchMove, 16);
 	}
 
 	componentDidMount() {
 		this._setInitialState();
+		this._setupSwipeHandlers();
 		this.props.autoPlay && this._play();
 	}
 
@@ -116,18 +135,114 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		this._slideToItem(nextIndex);
 	}
 
+	_setupSwipeHandlers() {
+		this.swipeListener = new VS({
+			element: this.rootComponent,
+			delta: this.props.swipeDelta,
+			onSwiping: this._throttledOnTouchMove,
+			onSwiped: this._onTouchEnd,
+			rotationAngle: 5,
+			mouseTrackingEnabled: this.props.mouseTrackingEnabled,
+			touchTrackingEnabled: this.props.touchTrackingEnabled,
+			preventDefaultTouchmoveEvent: this.props.preventEventOnTouchMove,
+			preventTrackingOnMouseleave: true,
+		});
+
+		this.swipeListener.init();
+	}
+
+	_getTranslateXPosition = (deltaX) => {
+		const { translate3d } = this.state;
+		return -(translate3d - Math.floor(deltaX));
+	};
+
+	_onTouchMove(e, eventData: EventData) {
+		const { absX, deltaX } = eventData;
+		const { infinite, swipeDelta } = this.props;
+		const { swipeShiftValue } = this.state;
+
+		this.hasUserAction = true;
+
+		if (this.isAnimationDisabled || (!this.isTouchMoveProcess && absX < Number(swipeDelta))) {
+			return;
+		}
+
+		this._pause();
+		this.isTouchMoveProcess = true;
+		let position = this._getTranslateXPosition(deltaX);
+
+		if (infinite === false) {
+			const { swipeLimitMin, swipeLimitMax } = this.state;
+
+			if (position > swipeLimitMin || -swipeLimitMax > position) {
+				return;
+			}
+
+			Utils.animate(this.stageComponent, { position });
+			this.lastSwipePosition = position;
+			return;
+		}
+
+		const minSwipeLimit = Utils.getMinSwipeLimit(this.state);
+		const maxSwipeLimit = Utils.getMaxSwipeLimit(this.state);
+
+		if (Utils.shouldRecalculateSwipePosition(position, minSwipeLimit, maxSwipeLimit)) {
+			try {
+				recalculatePosition();
+			} catch (err) {
+				Utils.debug(err);
+			}
+		}
+
+		Utils.animate(this.stageComponent, { position });
+		this.lastSwipePosition = position;
+
+		function recalculatePosition() {
+			if (Utils.getIsLeftDirection(deltaX)) {
+				position += swipeShiftValue;
+			} else {
+				position += -swipeShiftValue;
+			}
+
+			if (Utils.shouldRecalculateSwipePosition(position, minSwipeLimit, maxSwipeLimit)) {
+				recalculatePosition();
+			}
+		}
+	}
+
+	_onTouchEnd(e, { deltaX }: EventData) {
+		if (this.isTouchMoveProcess) {
+			this.isTouchMoveProcess = false;
+			this.isAnimationDisabled = true;
+
+			const { animationDuration } = this.state;
+			const position = Utils.getSwipeTransformation(this.state, deltaX, this.lastSwipePosition);
+
+			Utils.animate(this.stageComponent, { position, animationDuration });
+			this._beforeTouchEnd();
+		}
+	}
+
+	async _beforeTouchEnd() {
+		const { animationDuration } = this.state;
+
+		await Utils.sleep(animationDuration);
+		this.isAnimationDisabled = false;
+	}
+
 	async _slideToItem(
 		activeIndex,
 		fadeoutAnimationIndex: number | null = null,
 		fadeoutAnimationPosition: number | null = null,
 	) {
 		const { infinite, animationEasingFunction } = this.props;
-		const { itemsInSlide, itemsCount, animationDuration } = this.state;
+		const { itemsInSlide, itemsCount, animationDuration, isStageContentPartial } = this.state;
 
 		if (
+			isStageContentPartial ||
 			this.isAnimationDisabled ||
 			this.state.activeIndex === activeIndex ||
-			(!infinite && Utils.shouldCancelSlide(activeIndex, itemsCount, itemsInSlide))
+			(!infinite && Utils.shouldCancelSlideAnimation(activeIndex, itemsCount, itemsInSlide))
 		) {
 			return;
 		}
@@ -216,9 +331,9 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 	async _onSlideChanged() {
 		const { isAutoPlaying, isAutoPlayCanceledOnAction } = this.state;
-		const { disableAutoPlayOnAction, onSlideChanged } = this.props;
+		const { preventAutoPlayOnAction, onSlideChanged } = this.props;
 
-		if (disableAutoPlayOnAction && this.hasUserAction && !isAutoPlayCanceledOnAction) {
+		if (preventAutoPlayOnAction && this.hasUserAction && !isAutoPlayCanceledOnAction) {
 			await this.setState({ isAutoPlayCanceledOnAction: true, isAutoPlaying: false });
 		} else {
 			isAutoPlaying && this._play();

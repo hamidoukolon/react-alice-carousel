@@ -2,7 +2,7 @@ export const defaultProps = {
 	activeIndex: 0, // 1
 	children: [], // 1
 	items: [], // 1
-	infinite: false, // 1 TODO
+	infinite: false, // 1
 	showSlideInfo: false, // 1
 	dotsDisabled: false, // 1
 	buttonsDisabled: false, // 1
@@ -13,7 +13,7 @@ export const defaultProps = {
 	autoWidth: false, // 1
 	autoHeight: false, // 1
 	autoPlay: false, // 1
-	disableAutoPlayOnAction: true, // 1
+	preventAutoPlayOnAction: true, // 1
 	stopAutoPlayOnHover: true, // 1
 	preservePosition: false, // TODO
 	responsive: null, // 1
@@ -25,4 +25,9 @@ export const defaultProps = {
 	onInitialized: () => undefined, // 1
 	onSlideChange: () => undefined, // 1
 	onSlideChanged: () => undefined, // 1
+	swipeDelta: 10,
+	mouseTrackingEnabled: false,
+	touchTrackingEnabled: false,
+	preventEventOnTouchMove: false,
+	swipeExtraPadding: 200,
 };
