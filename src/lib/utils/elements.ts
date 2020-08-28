@@ -2,8 +2,12 @@ import * as Utils from '.';
 import { TransformationSetItem, Props, State } from '../types';
 
 export const getSlides = (props: Props) => {
-	const { children = [], items = [] } = props;
-	return children && children.length ? children : items;
+	const { children, items = [] } = props;
+
+	if (children) {
+		return children.length ? children : [children];
+	}
+	return items;
 };
 
 export const getItemsCount = (props: Props) => {
@@ -37,7 +41,7 @@ export const createClones = (props: Props) => {
 
 	if (itemsOffset && itemsInSlide === itemsCount) {
 		const afterOffsetClone = slides[0];
-		const beforeOffsetClone = slides.slice(-1);
+		const [beforeOffsetClone] = slides.slice(-1);
 
 		clonesBefore.unshift(beforeOffsetClone);
 		clonesAfter.push(afterOffsetClone);
@@ -65,10 +69,7 @@ export const createAutowidthTransformationSet = (el) => {
 			const { width = 0 } = getElementDimensions(child?.firstChild);
 
 			if (previewsChild) {
-				position =
-					previewsChildCursor === 0
-						? previewsChild.width
-						: previewsChild.width + previewsChild.position;
+				position = previewsChildCursor === 0 ? previewsChild.width : previewsChild.width + previewsChild.position;
 			}
 
 			acc.push({ position, width });
@@ -79,11 +80,7 @@ export const createAutowidthTransformationSet = (el) => {
 	return [];
 };
 
-export const createDefaultTransformationSet = (
-	children: unknown[],
-	galleryWidth: number,
-	itemsInSlide: number,
-) => {
+export const createDefaultTransformationSet = (children: unknown[], galleryWidth: number, itemsInSlide: number) => {
 	const width = getItemWidth(galleryWidth, itemsInSlide);
 
 	return children.reduce<TransformationSetItem[]>((acc, child, i) => {

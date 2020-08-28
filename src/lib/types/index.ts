@@ -4,7 +4,7 @@ export type Props = {
 	animationDuration?: number;
 	animationEasingFunction?: string;
 	items?: any[];
-	children?: any[];
+	children?: any;
 	infinite?: boolean;
 	showSlideInfo?: boolean;
 	dotsDisabled?: boolean;
@@ -91,4 +91,11 @@ export type RootComponent = {
 export type TransformationSetItem = {
 	width: number;
 	position: number;
+};
+
+export type SlideToItem = {
+	activeIndex: number;
+	fadeoutAnimationIndex?: number | null;
+	fadeoutAnimationPosition?: number | null;
+	slideImmediate?: boolean;
 };

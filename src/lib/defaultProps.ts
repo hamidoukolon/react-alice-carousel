@@ -1,6 +1,6 @@
 export const defaultProps = {
 	activeIndex: 0, // 1
-	children: [], // 1
+	children: undefined, // 1
 	items: [], // 1
 	infinite: false, // 1
 	showSlideInfo: false, // 1
