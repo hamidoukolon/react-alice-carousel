@@ -34,3 +34,23 @@ export const getSlideIndexForMultipleItems = (activeIndex, itemsInSlide, slidesL
 
 	return itemsInSlide > 0 ? Math.floor(activeIndex / itemsInSlide) - 1 : 0;
 };
+
+export const getSlideInfo = (activeIndex = 0, slidesLength = 0) => {
+	let slideIndex = activeIndex + 1;
+
+	if (slideIndex < 1) {
+		slideIndex = slidesLength;
+	} else if (slideIndex > slidesLength) {
+		slideIndex = 1;
+	}
+
+	return { slideIndex, slidesLength };
+};
+
+export const getSlideItemInfo = (state: State) => {
+	const { itemsInSlide, activeIndex, infinite, itemsCount } = state || {};
+	const isPrevSlideDisabled = infinite === false && activeIndex === 0;
+	const isNextSlideDisabled = infinite === false && itemsCount - itemsInSlide === activeIndex;
+
+	return { isPrevSlideDisabled, isNextSlideDisabled };
+};

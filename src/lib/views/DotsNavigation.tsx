@@ -14,8 +14,8 @@ export const DotsNavigation = ({ state, onClick, onMouseEnter, onMouseLeave }: P
 				if (i < dotsLength) {
 					// TODO check, refactoring
 
-					const isTheLastDotIndex = checkIsTheLastDotIndex(i, Boolean(infinite), dotsLength);
-					let nextIndex = getItemIndexForDotNavigation(i, isTheLastDotIndex, itemsCount, itemsInSlide);
+					const isTheLastDotIndex = Utils.checkIsTheLastDotIndex(i, Boolean(infinite), dotsLength);
+					let nextIndex = Utils.getItemIndexForDotNavigation(i, isTheLastDotIndex, itemsCount, itemsInSlide);
 					let currentIndex = Utils.getActiveSlideIndex(isNextSlideDisabled, state);
 
 					if (autoWidth) {
@@ -44,20 +44,6 @@ export const DotsNavigation = ({ state, onClick, onMouseEnter, onMouseLeave }: P
 			})}
 		</ul>
 	);
-};
-
-export const checkIsTheLastDotIndex = (index: number, infinite: boolean, dotsLength: number) => {
-	return !infinite && index === dotsLength - 1;
-};
-
-export const getItemIndexForDotNavigation = (
-	index: number,
-	isTheLastIndex: boolean,
-	slidesLength: number,
-	itemsInSlide: number,
-) => {
-	const result = isTheLastIndex ? slidesLength - itemsInSlide : index * itemsInSlide;
-	return result || 0;
 };
 
 type Props = {

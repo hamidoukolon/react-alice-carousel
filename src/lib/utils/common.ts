@@ -1,6 +1,5 @@
 import * as Utils from '.';
 import { Props, State } from '../types';
-import { getItemsCount } from '.';
 
 export const getIsStageContentPartial = (stageWidth = 0, contentWidth = 0) => {
 	return stageWidth >= contentWidth;
@@ -10,8 +9,8 @@ export const getStageContentWidth = (state: Partial<State>) => {
 	const { infinite, itemsCount = 0, itemsInSlide = 1, itemsOffset = 0, transformationSet = [] } = state;
 
 	if (infinite) {
-		const cursor = itemsOffset + itemsInSlide;
-		const items = transformationSet.slice(cursor, cursor + itemsCount);
+		const shiftIndex = Utils.getShiftIndex(itemsInSlide, itemsOffset);
+		const items = transformationSet.slice(shiftIndex, shiftIndex + itemsCount);
 
 		return items.reduce((acc, item) => (acc += item.width), 0);
 	}
@@ -45,7 +44,7 @@ export const calculateInitialProps = (props: Props, el): State => {
 	const { animationDuration, infinite = false, autoPlay = false, autoWidth = false } = props;
 	const clones = Utils.createClones(props);
 	const transition = Utils.getTransitionProperty();
-	const itemsCount = getItemsCount(props);
+	const itemsCount = Utils.getItemsCount(props);
 	const itemsOffset = Utils.getItemsOffset(props);
 	const itemsInSlide = getItemsInSlide(itemsCount, props);
 	const activeIndex = Utils.getStartIndex(props.activeIndex, itemsCount);

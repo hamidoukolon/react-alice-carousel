@@ -1,7 +1,7 @@
 import React from 'react';
 import VS, { EventData } from 'vanilla-swipe';
 import { defaultProps } from './defaultProps';
-import { Props, State, RootComponent, SlideToItem } from './types';
+import { Direction, Props, RootComponent, SlideToItem, State } from './types';
 import * as Views from './views';
 import * as Utils from './utils';
 
@@ -138,9 +138,9 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			onSwiping: this._throttledOnTouchMove,
 			onSwiped: this._onTouchEnd,
 			rotationAngle: 5,
-			mouseTrackingEnabled: this.props.mouseTrackingEnabled,
-			touchTrackingEnabled: this.props.touchTrackingEnabled,
-			preventDefaultTouchmoveEvent: this.props.preventEventOnTouchMove,
+			mouseTrackingEnabled: !this.props.disableMouseTracking,
+			touchTrackingEnabled: !this.props.disableTouchTracking,
+			preventDefaultTouchmoveEvent: this.props.cancelDefaultTouchmoveEventOnSwiping,
 			preventTrackingOnMouseleave: true,
 		});
 
@@ -203,6 +203,8 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	}
 
 	_onTouchEnd(e, { deltaX }: EventData) {
+		this._onSlideChange();
+
 		if (this.isTouchMoveProcess) {
 			this.isTouchMoveProcess = false;
 			this.isAnimationDisabled = true;
@@ -216,23 +218,26 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	}
 
 	async _beforeTouchEnd(position: number) {
-		const { animationDuration } = this.state;
-
-		await Utils.sleep(animationDuration);
+		this.lastSwipePosition = undefined;
+		await Utils.sleep(this.state.animationDuration);
 
 		const activeIndex = Utils.getSwipeTouchendIndex(this.state, position);
 		const translate3d = Utils.getTranslate3dProperty(activeIndex, this.state);
 
-		this.lastSwipePosition = undefined;
 		Utils.animate(this.stageComponent, { position: -translate3d });
 
-		await this.setState({
-			activeIndex,
-			translate3d,
-			transition: Utils.getTransitionProperty(),
-		});
+		if (this.state.activeIndex !== activeIndex) {
+			await this.setState({
+				activeIndex,
+				translate3d,
+				transition: Utils.getTransitionProperty(),
+			});
 
-		this._onSlideChanged();
+			this._onSlideChanged();
+			return;
+		}
+
+		this.isAnimationDisabled = false;
 	}
 
 	async _slideToItem({ activeIndex = 0, fadeoutAnimationIndex = null, fadeoutAnimationPosition = null }: SlideToItem) {
@@ -330,9 +335,9 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 	async _onSlideChanged() {
 		const { isAutoPlaying, isAutoPlayCanceledOnAction } = this.state;
-		const { preventAutoPlayOnAction, onSlideChanged } = this.props;
+		const { cancelAutoPlayOnAction, onSlideChanged } = this.props;
 
-		if (preventAutoPlayOnAction && this.hasUserAction && !isAutoPlayCanceledOnAction) {
+		if (cancelAutoPlayOnAction && this.hasUserAction && !isAutoPlayCanceledOnAction) {
 			await this.setState({ isAutoPlayCanceledOnAction: true, isAutoPlaying: false });
 		} else {
 			isAutoPlaying && this._play();
@@ -365,7 +370,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	}
 
 	_handleOnMouseEnter = () => {
-		if (this.props.stopAutoPlayOnHover && this.state.isAutoPlaying) {
+		if (this.props.cancelAutoPlayOnHover && this.state.isAutoPlaying) {
 			this.isHovered = true;
 			this._pause();
 		}
@@ -399,7 +404,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 		this.autoPlayIntervalId = window.setTimeout(() => {
 			if (!this.isHovered) {
-				autoPlayDirection === 'rtl' ? this.slidePrev({}) : this.slideNext({});
+				autoPlayDirection === Direction.RTL ? this.slidePrev({}) : this.slideNext({});
 			}
 		}, autoPlayInterval);
 	}
@@ -460,11 +465,11 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 					</div>
 				</div>
 
-				{this.props.showSlideInfo ? this._renderSlideInfo() : null}
 				{shouldDisableDots ? null : this._renderDotsNavigation()}
-				{!this.props.buttonsDisabled ? this._renderPrevButton() : null}
-				{!this.props.buttonsDisabled ? this._renderNextButton() : null}
-				{this.props.playButtonEnabled ? this._renderPlayPauseButton() : null}
+				{this.props.disableSlideInfo ? null : this._renderSlideInfo()}
+				{this.props.disableButtonsControls ? null : this._renderPrevButton()}
+				{this.props.disableButtonsControls ? null : this._renderNextButton()}
+				{this.props.disablePlayButtonControls ? null : this._renderPlayPauseButton()}
 			</div>
 		);
 	}

@@ -55,6 +55,7 @@
     "react/jsx-uses-react": 1,
     "react/jsx-uses-vars": 1,
     "react/prop-types": 0,
-    "@typescript-eslint/explicit-module-boundary-types": "off"
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }

@@ -14,7 +14,7 @@ export default class Autoheigth extends React.PureComponent<AppProps> {
 					// activeIndex={2}
 					// infinite={true}
 					autoHeight={true}
-					touchTrackingEnabled
+					disableTouchTracking
 					// responsive={{ 0: { items: 3 } }}
 					animationDuration={1000}
 					onSlideChanged={console.debug}

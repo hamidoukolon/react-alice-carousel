@@ -6,30 +6,32 @@ export type Props = {
 	items?: any[];
 	children?: any;
 	infinite?: boolean;
-	showSlideInfo?: boolean;
-	dotsDisabled?: boolean;
-	buttonsDisabled?: boolean;
-	playButtonEnabled?: boolean;
+	disableSlideInfo?: boolean;
+	disableDotsControls?: boolean;
+	disableButtonsControls?: boolean;
+	disablePlayButtonControls?: boolean;
 	autoPlayInterval?: number;
-	autoPlayDirection?: string | 'ltr' | 'rtl';
-	controlsStrategy?: string | 'default' | 'responsive';
+	autoPlayDirection?: string | Direction;
+	controlsStrategy?: string | ControlsStrategy;
 	paddingLeft?: number;
 	paddingRight?: number;
 	autoWidth?: boolean;
 	autoHeight?: boolean;
 	autoPlay?: boolean;
-	stopAutoPlayOnHover?: boolean;
+	cancelAutoPlayOnHover?: boolean;
 	preservePosition?: boolean;
 	responsive?: Responsive | null;
+	handleResizeEvent?: (e: Event) => void;
+	onResized?: (e: EventObject) => void;
 	onInitialized?: (e: EventObject) => void;
 	onSlideChange?: (e: EventObject) => void;
 	onSlideChanged?: (e: EventObject) => void;
 	swipeDelta?: number;
 	swipeExtraPadding?: number;
-	mouseTrackingEnabled?: boolean;
-	touchTrackingEnabled?: boolean;
-	preventAutoPlayOnAction?: boolean;
-	preventEventOnTouchMove?: boolean;
+	disableMouseTracking?: boolean;
+	disableTouchTracking?: boolean;
+	cancelAutoPlayOnAction?: boolean;
+	cancelDefaultTouchmoveEventOnSwiping?: boolean;
 };
 
 export type State = {
@@ -97,5 +99,14 @@ export type SlideToItem = {
 	activeIndex: number;
 	fadeoutAnimationIndex?: number | null;
 	fadeoutAnimationPosition?: number | null;
-	slideImmediate?: boolean;
 };
+
+export enum ControlsStrategy {
+	DEFAULT = 'default',
+	RESPONSIVE = 'responsive',
+}
+
+export enum Direction {
+	RTL = 'rtl',
+	LTR = 'ltr',
+}

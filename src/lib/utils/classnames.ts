@@ -1,4 +1,5 @@
 import { State } from '../types';
+import * as Utils from '.';
 
 export const getRenderStageItemClasses = (i = 0, state: State) => {
 	const { fadeoutAnimationIndex } = state;
@@ -11,12 +12,13 @@ export const getRenderStageItemClasses = (i = 0, state: State) => {
 
 export const isActiveItem = (i = 0, state: State) => {
 	const { activeIndex, itemsInSlide, itemsOffset, infinite, autoWidth } = state;
+	const shiftIndex = Utils.getShiftIndex(itemsInSlide, itemsOffset);
 
 	if (infinite && autoWidth) {
-		return i - itemsInSlide + itemsOffset === activeIndex + itemsOffset;
+		return i - shiftIndex === activeIndex + itemsOffset;
 	}
 
-	const index = activeIndex + itemsInSlide + itemsOffset;
+	const index = activeIndex + shiftIndex;
 
 	// TODO !infinite
 	if (!infinite) {
@@ -37,7 +39,6 @@ export const isClonedItem = (i = 0, state: State) => {
 		return i < itemsInSlide || i > itemsCount - 1 + itemsInSlide;
 	}
 
-	const index = itemsInSlide + itemsOffset;
-
-	return i < index || i > itemsCount - 1 + index;
+	const shiftIndex = Utils.getShiftIndex(itemsInSlide, itemsOffset);
+	return i < shiftIndex || i > itemsCount - 1 + shiftIndex;
 };

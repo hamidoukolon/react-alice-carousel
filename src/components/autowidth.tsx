@@ -19,7 +19,7 @@ export default class Autowidth extends React.PureComponent<AppProps> {
 					// animationDuration={10000}
 					animationEasingFunction={'cubic-bezier(0, 0, 0, 1)'}
 					onSlideChanged={console.debug}
-					touchTrackingEnabled={true}
+					disableTouchTracking={true}
 				>
 					<div className="item" style={{ width: 50 }}>
 						<h1>1</h1>

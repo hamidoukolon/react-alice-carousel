@@ -1,5 +1,9 @@
 import { State, Props, TransformationSetItem } from '../types';
 
+export const getShiftIndex = (itemsInSlide = 0, itemsOffset = 0) => {
+	return itemsInSlide + itemsOffset;
+};
+
 export const getStartIndex = (index, childrenLength) => {
 	return Math.min(index, childrenLength - 1) || 0;
 };
@@ -37,9 +41,8 @@ export const getSwipeLimitMax = (state: Partial<State>, props: Partial<Props>) =
 	const { itemsCount = 1, itemsOffset = 0, itemsInSlide = 1, transformationSet = [] } = state;
 
 	if (infinite) {
-		const cursor = itemsCount + itemsOffset + itemsInSlide;
-		const { position } = transformationSet[cursor];
-		return position;
+		const cursor = itemsCount + getShiftIndex(itemsInSlide, itemsOffset);
+		return (transformationSet[cursor] || {}).position || 0;
 	}
 
 	const { position } = getTransformationSetItem(-itemsInSlide, transformationSet);
@@ -98,14 +101,14 @@ export const getSwipeTouchendIndex = (state: State, position = 0) => {
 	const index = getTransformationItemIndex(transformationSet, position);
 
 	if (infinite) {
-		const shift = itemsInSlide + itemsOffset;
+		const shiftIndex = getShiftIndex(itemsInSlide, itemsOffset);
 
-		if (index < shift) {
+		if (index < shiftIndex) {
 			return itemsCount - itemsInSlide - itemsOffset + index;
-		} else if (index >= shift + itemsCount) {
-			return index - (shift + itemsCount);
+		} else if (index >= shiftIndex + itemsCount) {
+			return index - (shiftIndex + itemsCount);
 		} else {
-			return index - shift;
+			return index - shiftIndex;
 		}
 	}
 

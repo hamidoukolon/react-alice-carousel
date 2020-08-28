@@ -48,19 +48,12 @@ export const getRenderStageItemStyles = (i: number, state: State) => {
 };
 
 export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
-	const { autoWidth, infinite, itemsOffset = 0, itemsInSlide = 0, transformationSet = [] } = state;
-	let cursor = nextIndex + itemsOffset + itemsInSlide;
+	let cursor = nextIndex;
+	const { infinite, itemsOffset = 0, itemsInSlide = 0, transformationSet = [] } = state;
 
-	// TODO !infinite
-	if (!infinite) {
-		cursor = nextIndex;
+	if (infinite) {
+		cursor = nextIndex + Utils.getShiftIndex(itemsInSlide, itemsOffset);
 	}
 
-	if (autoWidth && infinite) {
-		cursor = nextIndex + itemsInSlide + itemsOffset;
-	}
-
-	const { position } = transformationSet[cursor] || {};
-
-	return position;
+	return (transformationSet[cursor] || {}).position;
 };
