@@ -21,17 +21,17 @@ export type Props = {
 	cancelAutoPlayOnHover?: boolean;
 	preservePosition?: boolean;
 	responsive?: Responsive | null;
-	handleResizeEvent?: (e: Event) => void;
+	onResizeEvent?: (e: Event) => void;
 	onResized?: (e: EventObject) => void;
 	onInitialized?: (e: EventObject) => void;
 	onSlideChange?: (e: EventObject) => void;
 	onSlideChanged?: (e: EventObject) => void;
 	swipeDelta?: number;
 	swipeExtraPadding?: number;
-	disableMouseTracking?: boolean;
-	disableTouchTracking?: boolean;
+	mouseTracking?: boolean;
+	touchTracking?: boolean;
 	cancelAutoPlayOnAction?: boolean;
-	cancelDefaultTouchmoveEventOnSwiping?: boolean;
+	touchMoveDefaultEvents?: boolean;
 };
 
 export type State = {
@@ -101,6 +101,10 @@ export type SlideToItem = {
 	fadeoutAnimationPosition?: number | null;
 };
 
+export type Delay = {
+	cancel: () => Promise<boolean>;
+};
+
 export enum ControlsStrategy {
 	DEFAULT = 'default',
 	RESPONSIVE = 'responsive',
@@ -110,3 +114,7 @@ export enum Direction {
 	RTL = 'rtl',
 	LTR = 'ltr',
 }
+
+export type ElementDimensions = {
+	width?: number;
+};

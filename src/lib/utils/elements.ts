@@ -1,5 +1,5 @@
 import * as Utils from '.';
-import { TransformationSetItem, Props, State } from '../types';
+import { TransformationSetItem, Props, State, ElementDimensions } from '../types';
 
 export const getSlides = (props: Props) => {
 	const { children, items = [] } = props;
@@ -134,3 +134,11 @@ export const getElementFirstChild = (stageComponent, cursor) => {
 	const children = (stageComponent && stageComponent.children) || [];
 	return (children[cursor] && children[cursor].firstChild) || null;
 };
+
+export function shouldHandleResizeEvent(
+	e: Event,
+	prevDimensions: ElementDimensions = {},
+	nextRootComponentDimensions: ElementDimensions = {},
+) {
+	return prevDimensions.width !== nextRootComponentDimensions.width;
+}

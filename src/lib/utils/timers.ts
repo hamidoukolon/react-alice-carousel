@@ -36,7 +36,3 @@ export function throttle(func, ms) {
 		}, ms);
 	};
 }
-
-export function sleep(ms = 0) {
-	return ms && new Promise((resolve) => setTimeout(resolve, ms));
-}

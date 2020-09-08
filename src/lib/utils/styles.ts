@@ -57,3 +57,7 @@ export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
 
 	return (transformationSet[cursor] || {}).position;
 };
+
+export const getTouchmoveTranslatePosition = (deltaX: number, translate3d: number) => {
+	return -(translate3d - Math.floor(deltaX));
+};
