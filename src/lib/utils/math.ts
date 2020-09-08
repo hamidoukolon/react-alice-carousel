@@ -114,3 +114,18 @@ export const getSwipeTouchendIndex = (state: State, position = 0) => {
 
 	return index;
 };
+
+export const getFadeoutAnimationIndex = (state: State) => {
+	const { infinite, activeIndex, itemsInSlide } = state;
+	return infinite ? activeIndex + itemsInSlide : activeIndex;
+};
+
+export const getFadeoutAnimationPosition = (nextIndex, state: State) => {
+	const { activeIndex, stageWidth } = state;
+
+	if (nextIndex < activeIndex) {
+		return (activeIndex - nextIndex) * -stageWidth || 0;
+	} else {
+		return (nextIndex - activeIndex) * stageWidth || 0;
+	}
+};

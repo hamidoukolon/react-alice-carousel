@@ -95,14 +95,10 @@ export type TransformationSetItem = {
 	position: number;
 };
 
-export type SlideToItem = {
+export type SlideTo = {
 	activeIndex: number;
 	fadeoutAnimationIndex?: number | null;
 	fadeoutAnimationPosition?: number | null;
-};
-
-export type Delay = {
-	cancel: () => Promise<boolean>;
 };
 
 export enum ControlsStrategy {

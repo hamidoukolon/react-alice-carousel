@@ -1,24 +1,24 @@
 import React from 'react';
 import VS, { EventData } from 'vanilla-swipe';
 import { defaultProps } from './defaultProps';
-import { Direction, Props, RootComponent, SlideToItem, State } from './types';
+import { Direction, Props, RootComponent, SlideTo, State } from './types';
 import * as Views from './views';
 import * as Utils from './utils';
 
 class AliceCarousel extends React.PureComponent<Props, State> {
 	static defaultProps: Props = defaultProps;
-	private swipeListener: VS | null = null;
+	private autoPlayTimeoutId: undefined | number;
 	private isAnimationDisabled: boolean;
 	private isHovered: boolean;
 	private isTouchMoveProcess: boolean;
 	private hasUserAction: boolean;
-	private autoPlayIntervalId: undefined | number;
 	private lastSwipePosition: undefined | number;
 	private rootComponent: null | undefined;
 	private rootComponentDimensions: RootComponent;
 	private stageComponent: null | undefined;
-	private touchEndTimeoutId: number | undefined;
 	private slideEndTimeoutId: number | undefined;
+	private swipeListener: VS | null = null;
+	private touchEndTimeoutId: number | undefined;
 	private _handleResizeDebounced: () => void | undefined;
 	private _handleTouchmoveThrottled: () => void | undefined;
 
@@ -30,23 +30,23 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 		this.state = {
 			activeIndex: 0,
+			animationDuration: 0,
 			autoWidth: false,
 			clones,
 			itemsCount,
 			itemsOffset: 0,
 			itemsInSlide: 1,
-			transformationSet: [],
 			infinite: false,
 			initialStageHeight: 0,
 			isAutoPlaying: false,
 			isAutoPlayCanceledOnAction: false,
 			isStageContentPartial: false,
-			translate3d: 0,
-			animationDuration: 0,
-			transition: Utils.getTransitionProperty(),
 			fadeoutAnimationIndex: null,
 			fadeoutAnimationPosition: null,
 			fadeoutAnimationProcessing: false,
+			transformationSet: [],
+			transition: Utils.getTransitionProperty(),
+			translate3d: 0,
 			stageWidth: 0,
 			stageContentWidth: 0,
 			swipeLimitMin: 0,
@@ -59,12 +59,10 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		this.isAnimationDisabled = false;
 		this.isTouchMoveProcess = false;
 		this.hasUserAction = false;
-		this.rootComponent = undefined;
 		this.lastSwipePosition = undefined;
+		this.rootComponent = undefined;
 		this.rootComponentDimensions = {};
 		this.stageComponent = undefined;
-		this.touchEndTimeoutId = undefined;
-		this.slideEndTimeoutId = undefined;
 		this.slideTo = this.slideTo.bind(this);
 		this.slidePrev = this.slidePrev.bind(this);
 		this.slideNext = this.slideNext.bind(this);
@@ -76,19 +74,81 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		this._handleTouchmoveThrottled = Utils.throttle(this._handleTouchmove, 16);
 	}
 
-	componentDidMount() {
-		this._setInitialState();
+	async componentDidMount() {
+		await this._setInitialState();
 		this._setupSwipeHandlers();
-		this.props.autoPlay && this._play();
+		this.props.autoPlay && this._handlePlay();
 
 		window.addEventListener('resize', this._handleResizeDebounced);
 	}
 
 	componentWillUnmount() {
-		this.cancelTimeoutAnimations();
+		this._cancelTimeoutAnimations();
 		this.swipeListener && this.swipeListener.destroy();
 
 		window.removeEventListener('resize', this._handleResizeDebounced);
+	}
+
+	get eventObject() {
+		const { itemsInSlide: itemsInSlide, activeIndex: item } = this.state;
+		const { isNextSlideDisabled, isPrevSlideDisabled } = Utils.getSlideItemInfo(this.state);
+		const slide = Utils.getActiveSlideIndex(isNextSlideDisabled, this.state);
+
+		return { item, slide, itemsInSlide, isNextSlideDisabled, isPrevSlideDisabled };
+	}
+
+	get isFadeoutAnimationAllowed() {
+		const { itemsInSlide } = this.state;
+		const { animationType, paddingLeft, paddingRight, autoWidth, autoHeight } = this.props;
+
+		return (
+			animationType === 'fadeout' && itemsInSlide === 1 && !(paddingLeft || paddingRight || autoWidth || autoHeight)
+		);
+	}
+
+	slideTo(activeIndex: number) {
+		this._handlePause();
+
+		if (this.isFadeoutAnimationAllowed) {
+			const fadeoutAnimationPosition = Utils.getFadeoutAnimationPosition(activeIndex, this.state);
+			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(this.state);
+			this._handleSlideTo({ activeIndex, fadeoutAnimationIndex, fadeoutAnimationPosition });
+		} else {
+			this._handleSlideTo({ activeIndex });
+		}
+	}
+
+	slidePrev(e) {
+		this._handlePause();
+		if (e && e.isTrusted) {
+			this.hasUserAction = true;
+		}
+
+		const activeIndex = this.state.activeIndex - 1;
+
+		if (this.isFadeoutAnimationAllowed) {
+			const fadeoutAnimationPosition = -this.state.stageWidth;
+			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(this.state);
+			this._handleSlideTo({ activeIndex, fadeoutAnimationIndex, fadeoutAnimationPosition });
+		}
+
+		this._handleSlideTo({ activeIndex });
+	}
+
+	slideNext(e) {
+		this._handlePause();
+		if (e && e.isTrusted) {
+			this.hasUserAction = true;
+		}
+
+		const activeIndex = this.state.activeIndex + 1;
+
+		if (this.isFadeoutAnimationAllowed) {
+			const fadeoutAnimationPosition = this.state.stageWidth;
+			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(this.state);
+			this._handleSlideTo({ activeIndex, fadeoutAnimationIndex, fadeoutAnimationPosition });
+		}
+		this._handleSlideTo({ activeIndex });
 	}
 
 	async _handleResize(e: Event) {
@@ -97,7 +157,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		const shouldProcessEvent = onResizeEvent || Utils.shouldHandleResizeEvent;
 
 		if (shouldProcessEvent(e, this.rootComponentDimensions, nextRootComponentDimensions)) {
-			this.cancelTimeoutAnimations();
+			this._cancelTimeoutAnimations();
 
 			this.rootComponentDimensions = nextRootComponentDimensions;
 
@@ -111,88 +171,10 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 			await this.setState(nextState);
 
-			this._onResized();
+			this._handleResized();
 			this.isAnimationDisabled = false;
-			isAutoPlaying && this._play();
+			isAutoPlaying && this._handlePlay();
 		}
-	}
-
-	cancelTimeoutAnimations() {
-		this._clearAutoPlayInterval();
-		clearTimeout(this.touchEndTimeoutId);
-		clearTimeout(this.slideEndTimeoutId);
-		this.touchEndTimeoutId = undefined;
-		this.slideEndTimeoutId = undefined;
-	}
-
-	get isFadeoutAnimationAllowed() {
-		const { itemsInSlide } = this.state;
-		const { animationType, paddingLeft, paddingRight, autoWidth, autoHeight } = this.props;
-
-		return (
-			animationType === 'fadeout' && itemsInSlide === 1 && !(paddingLeft || paddingRight || autoWidth || autoHeight)
-		);
-	}
-
-	slideTo(activeIndex: number) {
-		this._pause();
-
-		if (this.isFadeoutAnimationAllowed) {
-			const fadeoutAnimationPosition = Utils.getFadeoutAnimationPosition(activeIndex, this.state);
-			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(this.state);
-			this._slideToItem({ activeIndex, fadeoutAnimationIndex, fadeoutAnimationPosition });
-		} else {
-			this._slideToItem({ activeIndex });
-		}
-	}
-
-	slidePrev(e) {
-		this._pause();
-		if (e && e.isTrusted) {
-			this.hasUserAction = true;
-		}
-
-		const activeIndex = this.state.activeIndex - 1;
-
-		if (this.isFadeoutAnimationAllowed) {
-			const fadeoutAnimationPosition = -this.state.stageWidth;
-			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(this.state);
-			this._slideToItem({ activeIndex, fadeoutAnimationIndex, fadeoutAnimationPosition });
-		}
-
-		this._slideToItem({ activeIndex });
-	}
-
-	slideNext(e) {
-		this._pause();
-		if (e && e.isTrusted) {
-			this.hasUserAction = true;
-		}
-
-		const activeIndex = this.state.activeIndex + 1;
-
-		if (this.isFadeoutAnimationAllowed) {
-			const fadeoutAnimationPosition = this.state.stageWidth;
-			const fadeoutAnimationIndex = Utils.getFadeoutAnimationIndex(this.state);
-			this._slideToItem({ activeIndex, fadeoutAnimationIndex, fadeoutAnimationPosition });
-		}
-		this._slideToItem({ activeIndex });
-	}
-
-	_setupSwipeHandlers() {
-		this.swipeListener = new VS({
-			element: this.rootComponent,
-			delta: this.props.swipeDelta,
-			onSwiping: this._handleTouchmoveThrottled,
-			onSwiped: this._handleTouchend,
-			rotationAngle: 5,
-			mouseTrackingEnabled: this.props.mouseTracking,
-			touchTrackingEnabled: this.props.touchTracking,
-			preventDefaultTouchmoveEvent: !this.props.touchMoveDefaultEvents,
-			preventTrackingOnMouseleave: true,
-		});
-
-		this.swipeListener.init();
 	}
 
 	_handleTouchmove(e, eventData: EventData) {
@@ -206,7 +188,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			return;
 		}
 
-		this._pause();
+		this._handlePause();
 		this.isTouchMoveProcess = true;
 		let position = Utils.getTouchmoveTranslatePosition(deltaX, translate3d);
 		const { swipeLimitMin, swipeLimitMax } = this.state;
@@ -253,7 +235,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			const { animationDuration } = this.state;
 			const position = Utils.getSwipeTouchendPosition(this.state, deltaX, this.lastSwipePosition);
 
-			this._onSlideChange();
+			this._handleSlideChange();
 			Utils.animate(this.stageComponent, { position, animationDuration });
 			this._handleBeforeTouchEnd(position);
 		}
@@ -273,15 +255,14 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 				const transition = Utils.getTransitionProperty();
 
 				await this.setState({ activeIndex, translate3d, transition });
-				this._onSlideChanged();
+				this._handleSlideChanged();
 			} else {
 				this.isAnimationDisabled = false;
-				this.touchEndTimeoutId = undefined;
 			}
 		}, animationDuration);
 	}
 
-	async _slideToItem({ activeIndex = 0, fadeoutAnimationIndex = null, fadeoutAnimationPosition = null }: SlideToItem) {
+	async _handleSlideTo({ activeIndex = 0, fadeoutAnimationIndex = null, fadeoutAnimationPosition = null }: SlideTo) {
 		const { infinite, animationEasingFunction } = this.props;
 		const { itemsInSlide, itemsCount, animationDuration } = this.state;
 
@@ -293,7 +274,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			return;
 		}
 		this.isAnimationDisabled = true;
-		this._onSlideChange();
+		this._handleSlideChange();
 
 		let transition;
 		let fadeoutAnimationProcessing = false;
@@ -319,13 +300,10 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			fadeoutAnimationProcessing,
 		});
 
-		this.slideEndTimeoutId = setTimeout(async () => {
-			console.debug('SLIDE AnimationCanceled');
-			await this._beforeSlideChanged();
-		}, animationDuration);
+		this.slideEndTimeoutId = setTimeout(this._handleBeforeSlideEnd, animationDuration);
 	}
 
-	_beforeSlideChanged = async () => {
+	_handleBeforeSlideEnd = async () => {
 		const { activeIndex, itemsCount, fadeoutAnimationProcessing } = this.state;
 
 		if (Utils.shouldRecalculateSlideIndex(activeIndex, itemsCount)) {
@@ -341,7 +319,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			});
 		}
 
-		this._onSlideChanged();
+		this._handleSlideChanged();
 	};
 
 	async _handleUpdateSlidePosition(activeIndex) {
@@ -357,89 +335,88 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		});
 	}
 
-	_setInitialState() {
-		const initialState = Utils.calculateInitialProps(this.props, this.stageComponent);
-
-		this.setState(initialState, () => this._onInitialized(initialState));
-	}
-
-	_onInitialized(initialState): void {
-		this.rootComponentDimensions = Utils.getElementDimensions(this.rootComponent);
-
-		if (this.props.onInitialized) {
-			this.props.onInitialized(this._getEventObject(initialState));
-		}
-	}
-
-	_onSlideChange() {
+	_handleSlideChange() {
 		if (this.props.onSlideChange) {
-			this.props.onSlideChange(this._getEventObject());
+			this.props.onSlideChange(this.eventObject);
 		}
 	}
 
-	_onResized() {
+	_handleResized() {
 		if (this.props.onResized) {
-			this.props.onResized(this._getEventObject());
+			this.props.onResized(this.eventObject);
 		}
 	}
 
-	async _onSlideChanged() {
+	async _handleSlideChanged() {
 		const { isAutoPlaying, isAutoPlayCanceledOnAction } = this.state;
 		const { cancelAutoPlayOnAction, onSlideChanged } = this.props;
 
 		if (cancelAutoPlayOnAction && this.hasUserAction && !isAutoPlayCanceledOnAction) {
 			await this.setState({ isAutoPlayCanceledOnAction: true, isAutoPlaying: false });
 		} else {
-			isAutoPlaying && this._play();
+			isAutoPlaying && this._handlePlay();
 		}
 
 		this.isAnimationDisabled = false;
-		onSlideChanged && onSlideChanged(this._getEventObject());
+		onSlideChanged && onSlideChanged(this.eventObject);
 	}
-
-	_getEventObject = (state = this.state) => {
-		const { itemsInSlide: itemsInSlide, activeIndex: item } = state;
-		const { isNextSlideDisabled, isPrevSlideDisabled } = Utils.getSlideItemInfo(state);
-		const slide = Utils.getActiveSlideIndex(isNextSlideDisabled, state);
-
-		return { item, slide, itemsInSlide, isNextSlideDisabled, isPrevSlideDisabled };
-	};
-
-	_handleOnPlayPauseToggle = async () => {
-		const { isAutoPlaying } = this.state;
-
-		this.hasUserAction = true;
-
-		await this.setState({ isAutoPlaying: !isAutoPlaying, isAutoPlayCanceledOnAction: true });
-		isAutoPlaying ? this._pause() : this._play();
-	};
 
 	_handleDotClick(index) {
 		this.hasUserAction = true;
 		this.slideTo(index);
 	}
 
-	_handleOnMouseEnter = () => {
+	_handleMouseEnter = () => {
 		if (this.props.cancelAutoPlayOnHover && this.state.isAutoPlaying) {
 			this.isHovered = true;
-			this._pause();
+			this._handlePause();
 		}
 	};
 
-	_handleOnMouseLeave = () => {
+	_handleMouseLeave = () => {
 		if (this.state.isAutoPlaying) {
 			this.isHovered = false;
-			this._play();
+			this._handlePlay();
 		}
 	};
 
-	_play() {
+	_handlePlay() {
 		this._setAutoPlayInterval();
 	}
 
-	_pause = () => {
-		this._clearAutoPlayInterval();
+	_handlePause = () => {
+		this._clearAutoPlayTimeout();
 	};
+
+	_handlePlayPauseToggle = async () => {
+		const { isAutoPlaying } = this.state;
+
+		this.hasUserAction = true;
+
+		await this.setState({ isAutoPlaying: !isAutoPlaying, isAutoPlayCanceledOnAction: true });
+		isAutoPlaying ? this._handlePause() : this._handlePlay();
+	};
+
+	_clearAutoPlayTimeout() {
+		clearTimeout(this.autoPlayTimeoutId);
+		this.autoPlayTimeoutId = undefined;
+	}
+
+	_clearSlideEndTimeout() {
+		clearTimeout(this.slideEndTimeoutId);
+		this.slideEndTimeoutId = undefined;
+	}
+
+	_clearTouchEndTimeout() {
+		clearTimeout(this.touchEndTimeoutId);
+		this.touchEndTimeoutId = undefined;
+	}
+
+	_cancelTimeoutAnimations() {
+		this._clearAutoPlayTimeout();
+		this._clearSlideEndTimeout();
+		this._clearTouchEndTimeout();
+	}
 
 	_setRootComponentRef = (node) => {
 		return (this.rootComponent = node);
@@ -449,19 +426,41 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		return (this.stageComponent = node);
 	};
 
+	async _setInitialState() {
+		const initialState = Utils.calculateInitialProps(this.props, this.stageComponent);
+		this.rootComponentDimensions = Utils.getElementDimensions(this.rootComponent);
+
+		await this.setState(initialState);
+
+		if (this.props.onInitialized) {
+			this.props.onInitialized(this.eventObject);
+		}
+	}
+
 	_setAutoPlayInterval() {
 		const { autoPlayDirection, autoPlayInterval } = this.props;
 
-		this.autoPlayIntervalId = setTimeout(() => {
+		this.autoPlayTimeoutId = setTimeout(() => {
 			if (!this.isHovered) {
 				autoPlayDirection === Direction.RTL ? this.slidePrev({}) : this.slideNext({});
 			}
 		}, autoPlayInterval);
 	}
 
-	_clearAutoPlayInterval() {
-		clearTimeout(this.autoPlayIntervalId);
-		this.autoPlayIntervalId = undefined;
+	_setupSwipeHandlers() {
+		this.swipeListener = new VS({
+			element: this.rootComponent,
+			delta: this.props.swipeDelta,
+			onSwiping: this._handleTouchmoveThrottled,
+			onSwiped: this._handleTouchend,
+			rotationAngle: 5,
+			mouseTrackingEnabled: this.props.mouseTracking,
+			touchTrackingEnabled: this.props.touchTracking,
+			preventDefaultTouchmoveEvent: !this.props.touchMoveDefaultEvents,
+			preventTrackingOnMouseleave: true,
+		});
+
+		this.swipeListener.init();
 	}
 
 	_renderStageItem = (item, i: number) => {
@@ -491,7 +490,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 	_renderPlayPauseButton() {
 		const { isAutoPlaying } = this.state;
-		return <Views.PlayPauseButton isPlaying={isAutoPlaying} onClick={this._handleOnPlayPauseToggle} />;
+		return <Views.PlayPauseButton isPlaying={isAutoPlaying} onClick={this._handlePlayPauseToggle} />;
 	}
 
 	render() {
@@ -506,8 +505,8 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 					<div
 						style={wrapperStyles}
 						className="alice-carousel__wrapper"
-						onMouseEnter={this._handleOnMouseEnter}
-						onMouseLeave={this._handleOnMouseLeave}
+						onMouseEnter={this._handleMouseEnter}
+						onMouseLeave={this._handleMouseLeave}
 					>
 						<ul style={stageStyles} className="alice-carousel__stage" ref={this._setStageComponentRef}>
 							{clones.map(this._renderStageItem)}
