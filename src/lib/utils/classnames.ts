@@ -5,7 +5,7 @@ export const getRenderStageItemClasses = (i = 0, state: State) => {
 	const { fadeoutAnimationIndex } = state;
 	const isActive = isActiveItem(i, state) ? ' __active' : '';
 	const isCloned = isClonedItem(i, state) ? ' __cloned' : '';
-	const isAnimated = i === fadeoutAnimationIndex || 0 ? ' animated animated-out fadeOut' : '';
+	const isAnimated = i === fadeoutAnimationIndex ? ' animated animated-out fadeOut' : '';
 
 	return 'alice-carousel__stage-item' + isActive + isCloned + isAnimated;
 };

@@ -28,11 +28,11 @@ export const getSwipeLimitMin = (state: Partial<State>, props: Partial<Props>) =
 	const { infinite, swipeExtraPadding = 0 } = props;
 
 	if (infinite) {
-		const { position } = transformationSet[itemsOffset];
+		const { position } = transformationSet[itemsOffset] || {};
 		return position;
 	}
 
-	const { width } = transformationSet[0];
+	const { width = 0 } = transformationSet[0] || {};
 	return Math.min(swipeExtraPadding, width);
 };
 

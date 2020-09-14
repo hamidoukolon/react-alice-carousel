@@ -5,6 +5,8 @@
 
 React Alice Carousel is a React component for building content galleries, content rotators and any React carousels.
 
+#### Live demo [👉here](https://maxmarinich.github.io/react-alice-carousel/demos)
+
 ![demo gif](https://github.com/maxmarinich/react-alice-carousel/raw/master/src/assets/img/react-alice-carousel.gif)
 
 ![demo gif](https://github.com/maxmarinich/react-alice-carousel/raw/master/src/assets/img/react-alice-carousel-demo.gif)
@@ -40,7 +42,7 @@ npm i react-alice-carousel
 # SCSS
 @import "react-alice-carousel/lib/scss/alice-carousel.scss";
 ```
-#### Quick start
+#### Usage
 ```javascript
 import React from 'react';
 import AliceCarousel from 'react-alice-carousel';
@@ -57,10 +59,12 @@ const items = [
 
 const Gallery = () => {
   return (
-    <AliceCarousel mouseTrackingEnabled items={items} />
+    <AliceCarousel mouseTracking items={items} />
   );
 }
 ```
+#####❓Full [documentation](https://maxmarinich.github.io/react-alice-carousel) available at [https://maxmarinich.github.io/react-alice-carouse](https://maxmarinich.github.io/react-alice-carousel)
+
 ### Build the project locally
 #### Clone
 ```apacheconfig

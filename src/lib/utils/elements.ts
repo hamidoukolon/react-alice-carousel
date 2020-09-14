@@ -106,7 +106,7 @@ export function getElementDimensions(element) {
 
 		return { width, height };
 	}
-	return {};
+	return { width: 0, height: 0 };
 }
 
 export const getAutoheightProperty = (stageComponent: Element, props: Props, state: State) => {
@@ -207,7 +207,7 @@ export const getTranslate3dProperty = (nextIndex, state: Partial<State>) => {
 		cursor = nextIndex + Utils.getShiftIndex(itemsInSlide, itemsOffset);
 	}
 
-	return (transformationSet[cursor] || {}).position;
+	return (transformationSet[cursor] || {}).position || 0;
 };
 
 export const getTouchmoveTranslatePosition = (deltaX: number, translate3d: number) => {

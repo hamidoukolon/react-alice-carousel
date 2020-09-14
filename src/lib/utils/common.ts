@@ -29,19 +29,21 @@ export const getItemsInSlide = (itemsCount: number, props: Props) => {
 		const configKeys = Object.keys(responsive);
 
 		if (configKeys.length) {
-			configKeys.forEach((key) => {
-				if (Number(key) < window.innerWidth) {
-					itemsInSlide = Math.min(responsive[key].items, itemsCount) || itemsInSlide;
-				}
-			});
+			if (typeof window !== 'object') {
+				configKeys.forEach((key) => {
+					if (Number(key) < window.innerWidth) {
+						itemsInSlide = Math.min(responsive[key].items, itemsCount) || itemsInSlide;
+					}
+				});
+			}
 		}
 	}
 	return itemsInSlide;
 };
 
-export const calculateInitialProps = (props: Props, el): State => {
+export const calculateInitialState = (props: Partial<Props>, el): State => {
 	let transformationSet;
-	const { animationDuration, infinite = false, autoPlay = false, autoWidth = false } = props;
+	const { animationDuration = 0, infinite = false, autoPlay = false, autoWidth = false } = props;
 	const clones = Utils.createClones(props);
 	const transition = Utils.getTransitionProperty();
 	const itemsCount = Utils.getItemsCount(props);

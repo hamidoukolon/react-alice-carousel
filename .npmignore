@@ -51,12 +51,8 @@ jspm_packages
 package-lock.json
 
 # Static files
-app
-build
-configDev
+config
 tests
 public
-static
-dist
 src
-gulpfile.js
+docs

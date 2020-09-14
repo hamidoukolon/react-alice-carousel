@@ -20,7 +20,7 @@ export type Props = {
 	autoPlay?: boolean;
 	cancelAutoPlayOnHover?: boolean;
 	preservePosition?: boolean;
-	responsive?: Responsive | null;
+	responsive?: Responsive;
 	onResizeEvent?: (e: Event) => void;
 	onResized?: (e: EventObject) => void;
 	onInitialized?: (e: EventObject) => void;
