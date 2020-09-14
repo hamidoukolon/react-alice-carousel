@@ -2,8 +2,8 @@
   "name": "react-alice-carousel",
   "version": "2.0.0",
   "description": "React image gallery, react slideshow carousel, react content rotator",
-  "main": "./lib/react-alice-carousel",
-  "types": "./lib/types/index.d.ts",
+  "main": "./lib/react-alice-carousel.js",
+  "types": "./lib/react-alice-carousel.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/maxmarinich/react-alice-carousel.git"
@@ -15,9 +15,9 @@
     "lint": "eslint ./src/**/**.ts",
     "format": "prettier --write ./src/**/**.ts",
     "postpublish": "git push --tags",
-    "precommit": "cross-env npm run lint && npm test",
+    "precommit": "npm run lint && npm test",
     "prepare": "npm run build:lib",
-    "prepush": "cross-env npm run lint && npm test",
+    "prepush": "npm run lint && npm test",
     "start": "webpack-dev-server --hot --config config/webpack/config.dev.js",
     "test": "jest --config jestconfig.json",
     "test:watch": "jest --watch --config jestconfig.json",
@@ -89,6 +89,7 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "html-loader": "^1.1.0",
     "html-webpack-plugin": "^4.0.4",
+    "husky": "^4.3.0",
     "jest": "^26.4.2",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.14.1",
@@ -106,5 +107,11 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run precommit",
+      "pre-push": "npm run precommit"
+    }
   }
 }
