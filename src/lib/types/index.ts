@@ -21,7 +21,7 @@ export type Props = {
 	cancelAutoPlayOnHover?: boolean;
 	preservePosition?: boolean;
 	responsive?: Responsive;
-	onResizeEvent?: (e: Event) => void;
+	onResizeEvent?: (e: Event, prevProps: ElementDimensions, nextProps: ElementDimensions) => boolean;
 	onResized?: (e: EventObject) => void;
 	onInitialized?: (e: EventObject) => void;
 	onSlideChange?: (e: EventObject) => void;
