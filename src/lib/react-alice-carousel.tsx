@@ -1,7 +1,7 @@
 import React from 'react';
 import VS, { EventData } from 'vanilla-swipe';
 import { defaultProps } from './defaultProps';
-import { Direction, Props, RootComponent, SlideTo, State } from './types';
+import { Direction, Props, RootElement, SlideTo, State } from './types';
 import * as Views from './views';
 import * as Utils from './utils';
 
@@ -13,8 +13,8 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	private isTouchMoveProcess: boolean;
 	private hasUserAction: boolean;
 	private lastSwipePosition: undefined | number;
-	private rootComponent: null | undefined;
-	private rootComponentDimensions: RootComponent;
+	private RootElement: null | undefined;
+	private rootComponentDimensions: RootElement;
 	private stageComponent: null | undefined;
 	private slideEndTimeoutId: number | undefined;
 	private swipeListener: VS | null = null;
@@ -60,7 +60,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		this.isTouchMoveProcess = false;
 		this.hasUserAction = false;
 		this.lastSwipePosition = undefined;
-		this.rootComponent = undefined;
+		this.RootElement = undefined;
 		this.rootComponentDimensions = {};
 		this.stageComponent = undefined;
 		this.slideTo = this.slideTo.bind(this);
@@ -207,7 +207,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 	async _handleResize(e: Event) {
 		const { onResizeEvent } = this.props;
-		const nextRootComponentDimensions = Utils.getElementDimensions(this.rootComponent);
+		const nextRootComponentDimensions = Utils.getElementDimensions(this.RootElement);
 		const shouldProcessEvent = onResizeEvent || Utils.shouldHandleResizeEvent;
 
 		if (shouldProcessEvent(e, this.rootComponentDimensions, nextRootComponentDimensions)) {
@@ -474,7 +474,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	}
 
 	_setRootComponentRef = (node) => {
-		return (this.rootComponent = node);
+		return (this.RootElement = node);
 	};
 
 	_setStageComponentRef = (node) => {
@@ -483,7 +483,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 	async _setInitialState() {
 		const initialState = Utils.calculateInitialState(this.props, this.stageComponent);
-		this.rootComponentDimensions = Utils.getElementDimensions(this.rootComponent);
+		this.rootComponentDimensions = Utils.getElementDimensions(this.RootElement);
 
 		await this.setState(initialState);
 
@@ -504,7 +504,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 	_setupSwipeHandlers() {
 		this.swipeListener = new VS({
-			element: this.rootComponent,
+			element: this.RootElement,
 			delta: this.props.swipeDelta,
 			onSwiping: this._handleTouchmoveThrottled,
 			onSwiped: this._handleTouchend,

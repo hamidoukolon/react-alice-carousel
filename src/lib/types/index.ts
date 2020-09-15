@@ -21,9 +21,9 @@ export type Props = {
 	cancelAutoPlayOnHover?: boolean;
 	preservePosition?: boolean;
 	responsive?: Responsive;
-	onResizeEvent?: (e: Event, prevProps: ElementDimensions, nextProps: ElementDimensions) => boolean;
-	onResized?: (e: EventObject) => void;
 	onInitialized?: (e: EventObject) => void;
+	onResizeEvent?: (e: Event, prevProps: RootElement, nextProps: RootElement) => boolean;
+	onResized?: (e: EventObject) => void;
 	onSlideChange?: (e: EventObject) => void;
 	onSlideChanged?: (e: EventObject) => void;
 	swipeDelta?: number;
@@ -85,7 +85,7 @@ export type EventObject = {
 	isNextSlideDisabled: boolean;
 };
 
-export type RootComponent = {
+export type RootElement = {
 	width?: number;
 	height?: number;
 };
@@ -110,7 +110,3 @@ export enum Direction {
 	RTL = 'rtl',
 	LTR = 'ltr',
 }
-
-export type ElementDimensions = {
-	width?: number;
-};

@@ -1,7 +1,6 @@
 ## Documentation
 
 #### Options
-
 - `activeIndex` : Number, default `0` - Set carousel at the specified position.
 - `animationDuration`: Number, default `400` - Set duration of animation.
 - `animationEasingFunction`: String | [Function](https://developer.mozilla.org/ru/docs/Web/CSS/animation-timing-function), default `ease` - Property sets how an animation progresses through the duration of each cycle.
@@ -28,24 +27,29 @@
 - `swipeExtraPadding`: Number, default `200`  - Set maximum distance from initial place before swipe action will be stopped (px).
 - `touchTracking`: Boolean, default `true`  - Enable touch move animation.
 - `touchMoveDefaultEvents`: Boolean, default `true`  - Enable touch move default events on swiping.
-- `onInitialized`: Function - Fired when the event object is changing / return `EventObject`.
-- `onResized`: Function - Fired as callback after the gallery was resized / returns `EventObject`.
-- `onResizeEvent`: Function - Fired during `resize` event to determine whether the event handler should be called / return `boolean`.
-- `onSlideChange`: Function - Fired while the event object is changing / returns `EventObject`.
-- `onSlideChanged`: Function - Fired after the event object was changed / returns `EventObject`.
-
-    `EventObject` example:
-    ```typescript
-      {
-          item: number;  // index of the current item`s position
-          slide: number;  // index of the current slide`s position
-          itemsInSlide: number;   // number of elements in the slide
-          isPrevSlideDisabled: bool; // indicator to control the visibility of dots navigation
-          isNextSlideDisabled: bool;
-      }
-    ```
-
+- `onInitialized(e: EventObject) => void`: Function - Fired when the event object is changing.
+- `onResizeEvent(e: Event, prevProps: RootElement, nextProps: RootElement) => boolean`: Function - Fired during `resize` event to determine whether the event handler should be called.
+- `onResized(e: EventObject) => void`: Function - Fired as callback after the gallery was resized.
+- `onSlideChange(e: EventObject) => void`: Function - Fired while the event object is changing.
+- `onSlideChanged(e: EventObject) => void`: Function - Fired after the event object was changed.
+  
 #### Methods
-- `slideTo(activeIndex?: number): void` : Go to the specified slide.
-- `slidePrev(e: any): void` : Go to the specified slide.
-- `slideNext(e: any): void` : Go to the specified slide.
+- `slidePrev(e: any) => void` : Go to the prev slide.
+- `slideNext(e: any) => void` : Go to the next slide.
+- `slideTo(activeIndex?: number) => void` : Go to the specified slide.
+
+#### Types
+```typescript
+type RootElement = {
+    width?: number;
+    height?: number;
+};
+
+type EventObject = {
+    item: number;  // index of the current item`s position
+    slide: number;  // index of the current slide`s position
+    itemsInSlide: number;   // number of elements in the slide
+    isPrevSlideDisabled: boolean; // indicator to control the visibility of dots navigation
+    isNextSlideDisabled: boolean;
+};
+```
