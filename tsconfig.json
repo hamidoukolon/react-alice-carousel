@@ -20,5 +20,6 @@
     "noImplicitThis": false,
     "noImplicitAny": false
   },
-  "include": ["src/lib/*"]
+  "include": ["src/lib/*"],
+  "exclude": ["tests"]
 }

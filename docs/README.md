@@ -1,6 +1,6 @@
-## Documentation
+# Documentation
 
-#### Options
+## Options
 - `activeIndex` : Number, default `0` - Set carousel at the specified position.
 - `animationDuration`: Number, default `400` - Set duration of animation.
 - `animationEasingFunction`: String | [Function](https://developer.mozilla.org/ru/docs/Web/CSS/animation-timing-function), default `ease` - Property sets how an animation progresses through the duration of each cycle.
@@ -33,12 +33,12 @@
 - `onSlideChange(e: EventObject) => void`: Function - Fired while the event object is changing.
 - `onSlideChanged(e: EventObject) => void`: Function - Fired after the event object was changed.
   
-#### Methods
+## Methods
 - `slidePrev(e: any) => void` : Go to the prev slide.
 - `slideNext(e: any) => void` : Go to the next slide.
 - `slideTo(activeIndex?: number) => void` : Go to the specified slide.
 
-#### Types
+## Types
 ```typescript
 type RootElement = {
     width?: number;

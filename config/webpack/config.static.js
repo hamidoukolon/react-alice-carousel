@@ -1,17 +1,27 @@
+const { resolve } = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
 	entry: ['./src/index.tsx'],
 	output: {
-		path: __dirname + '/static/',
+		path: resolve(__dirname, '../../', 'static'),
+		publicPath: '/',
 	},
 	module: {
 		rules: [
 			{
 				test: /\.ts(x?)$/,
 				exclude: /node_modules/,
-				use: ['babel-loader', 'awesome-typescript-loader'],
+				use: [
+					'babel-loader',
+					{
+						loader: 'awesome-typescript-loader',
+						options: {
+							transpileOnly: true,
+						},
+					},
+				],
 			},
 			{
 				test: /\.(sa|sc|c)ss$/,
