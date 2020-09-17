@@ -1,0 +1,36 @@
+@import "../../common";
+
+.header {
+  background-color: darken($color-base, 20%);
+  &-row {
+    max-width: $content-max-width;
+    min-width: $content-min-width;
+    box-sizing: border-box;
+    padding: 20px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.logo {
+  color: $color-light;
+  text-align: left;
+  user-select: none;
+  margin: 0;
+  font-style: italic;
+  display: inline-block;
+
+  &-badge {
+    color: $color-dark;
+    font-size: 1rem;
+  }
+}
+
+.repo-link {
+  color: $color-light;
+  text-decoration: none;
+  line-height: 16px;
+  display: flex;
+}
