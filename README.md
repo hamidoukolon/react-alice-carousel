@@ -9,7 +9,7 @@ React Alice Carousel is a React component for building content galleries, conten
 
 ####👉Live demo: [v2.x.x](https://maxmarinich.github.io/react-alice-carousel)
 
-####👉Previous version: [v1.x.x](https://maxmarinich.github.io/react-alice-carouse/tree/v1)
+####👉Previous version: [v1.x.x](https://github.com/maxmarinich/react-alice-carousel/tree/v1)
 
 ![demo gif](https://github.com/maxmarinich/react-alice-carousel/raw/master/src/assets/img/react-alice-carousel.gif)
 
