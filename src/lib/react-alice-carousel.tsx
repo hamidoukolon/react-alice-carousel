@@ -218,7 +218,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			const { itemsCount, isAutoPlaying } = this.state;
 			const activeIndex = Utils.getUpdateSlidePositionIndex(this.state.activeIndex, itemsCount);
 			const currState = Utils.calculateInitialState({ ...this.props, activeIndex }, this.stageComponent);
-			const translate3d = Utils.getTranslate3dProperty(currState.activeIndex, currState);
+			const translate3d = Utils.getTranslate3dProperty(activeIndex, currState);
 			const nextState = { ...currState, translate3d, isAutoPlaying };
 
 			Utils.animate(this.stageComponent, { position: -translate3d });
@@ -242,7 +242,10 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			return;
 		}
 
-		this._handlePause();
+		if (!this.isTouchMoveProcess) {
+			this._cancelTimeoutAnimations();
+		}
+
 		this.isTouchMoveProcess = true;
 		let position = Utils.getTouchmoveTranslatePosition(deltaX, translate3d);
 		const { swipeLimitMin, swipeLimitMax } = this.state;
@@ -287,15 +290,16 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			this.isAnimationDisabled = true;
 
 			const { animationDuration } = this.state;
+			const { animationEasingFunction } = this.props;
 			const position = Utils.getSwipeTouchendPosition(this.state, deltaX, this.lastSwipePosition);
 
 			this._handleSlideChange();
 
 			requestAnimationFrame(() => {
-				Utils.animate(this.stageComponent, { position, animationDuration });
+				Utils.animate(this.stageComponent, { position, animationDuration, animationEasingFunction });
 			});
 
-			this._handleBeforeTouchEnd(position);
+			return this._handleBeforeTouchEnd(position);
 		}
 	}
 
@@ -312,9 +316,8 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			});
 
 			const transition = Utils.getTransitionProperty();
-
 			await this.setState({ activeIndex, translate3d, transition });
-			this._handleSlideChanged();
+			await this._handleSlideChanged();
 		}, animationDuration);
 	}
 
@@ -330,6 +333,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			return;
 		}
 		this.isAnimationDisabled = true;
+		this._cancelTimeoutAnimations();
 		this._handleSlideChange();
 
 		let transition;
@@ -577,6 +581,8 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		const shouldDisableDots = Utils.shouldDisableDots(this.props, this.state);
 		const wrapperStyles = Utils.getRenderWrapperStyles(this.props, this.state, this.stageComponent);
 		const stageStyles = Utils.getRenderStageStyles({ translate3d }, { transition });
+
+		console.debug('render', stageStyles);
 
 		return (
 			<div className="alice-carousel">

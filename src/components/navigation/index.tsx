@@ -1,8 +1,7 @@
-import React, { memo } from 'react';
-import scheme from './scheme';
+import React from 'react';
 import './styles.scss';
 
-const Navigation = ({ onclick }) => {
+const Navigation = ({ onclick, scheme }) => {
 	return (
 		<nav className="navigation">
 			{scheme.map(({ id, name }) => {
@@ -16,5 +15,4 @@ const Navigation = ({ onclick }) => {
 	);
 };
 
-export { scheme };
-export default memo(Navigation);
+export default Navigation;

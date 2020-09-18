@@ -144,10 +144,10 @@ export function shouldHandleResizeEvent(
 }
 
 export function animate(element, options) {
-	const { position = 0, animationDuration = 0 } = options || {};
+	const { position = 0, animationDuration = 0, animationEasingFunction = 'ease' } = options || {};
 
 	if (isElement(element)) {
-		element.style['transition'] = `transform ${animationDuration}ms`;
+		element.style['transition'] = `transform ${animationDuration}ms ${animationEasingFunction} 0ms`;
 		element.style['transform'] = `translate3d(${position}px, 0, 0)`;
 	}
 	return element;
@@ -167,8 +167,8 @@ export const getRenderWrapperStyles = (props: Props, state: State, element) => {
 };
 
 export const getTransitionProperty = (options?: Transition): string => {
-	const { animationDuration = 0, animationEasingFunction = '' } = options || {};
-	return `transform ${animationDuration}ms ${animationEasingFunction}`;
+	const { animationDuration = 0, animationEasingFunction = 'ease' } = options || {};
+	return `transform ${animationDuration}ms ${animationEasingFunction} 0ms`;
 };
 
 export const getRenderStageStyles = (nextStyles, currentStyles: Style): Style => {

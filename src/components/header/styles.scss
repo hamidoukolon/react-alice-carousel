@@ -3,11 +3,7 @@
 .header {
   background-color: darken($color-base, 20%);
   &-row {
-    max-width: $content-max-width;
-    min-width: $content-min-width;
-    box-sizing: border-box;
-    padding: 20px;
-    margin: auto;
+    @include container;
     display: flex;
     justify-content: space-between;
     align-items: center;

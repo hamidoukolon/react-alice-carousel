@@ -13,3 +13,7 @@ html {
 	width: 100%;
 	margin: auto;
 }
+
+.s-main {
+	@include container;
+}

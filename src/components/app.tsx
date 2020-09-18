@@ -1,34 +1,42 @@
 import React from 'react';
 import Header from './header';
-import Navigation, { scheme } from './navigation';
+import Navigation from './navigation';
+import getPageComponent from './pages';
+import scheme from './scheme';
 import '../main.scss';
 
 export default class App extends React.PureComponent<AppProps> {
 	state = {
-		navId: '',
+		pageID: '',
 	};
 
 	componentDidMount() {
-		const [{ id }] = scheme;
+		this.setInitialState();
+	}
+
+	setInitialState() {
 		const { hash = '#' } = window.location;
 		const hashId = hash.slice(1);
 
 		if (scheme.find(({ id }) => id === hashId)) {
-			this.setState({ navId: hashId });
+			this.setActivePage(hashId);
 		} else {
-			this.setState({ navId: id });
+			const [{ id }] = scheme;
+			this.setActivePage(id);
 		}
 	}
 
-	setActive = (navId = '') => {
-		this.setState({ navId });
+	setActivePage = (pageID = '') => {
+		this.setState({ pageID });
 	};
 
 	render() {
+		const { pageID } = this.state;
 		return (
 			<div className="app">
 				<Header />
-				<Navigation onclick={this.setActive} />
+				<Navigation onclick={this.setActivePage} scheme={scheme} />
+				<main className="s-main">{getPageComponent(pageID, scheme)}</main>
 			</div>
 		);
 	}

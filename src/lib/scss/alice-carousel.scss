@@ -33,8 +33,14 @@ $play-btn-size: 32px !default;
   height: 100%;
   margin: 0;
   padding: 0;
-
   white-space: nowrap;
+
+  transform-style: flat;
+  -webkit-transform-style: flat;
+
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+
   &-item {
     position: relative;
 

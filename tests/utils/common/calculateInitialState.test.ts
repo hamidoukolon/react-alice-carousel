@@ -26,7 +26,7 @@ describe('Utils.calculateInitialState', function () {
 			swipeLimitMin: 0,
 			swipeShiftValue: 0,
 			transformationSet: [],
-			transition: 'transform 0ms ',
+			transition: 'transform 0ms ease 0ms',
 			translate3d: 0,
 		});
 	});
