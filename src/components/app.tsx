@@ -11,34 +11,43 @@ export default class App extends React.PureComponent<AppProps> {
 		autoWidth: false,
 		infinite: false,
 		items: [
-			<div className="item" style={{ width: 100 }}>
+			<div className="item">
 				<h1 className="__mod">{100}</h1>
 			</div>,
-			<div className="item" style={{ width: 200 }}>
+			<div className="item">
 				<h1 className="__mod-2">2</h1>
 			</div>,
-			<div className="item" style={{ width: 300 }}>
+			<div className="item">
 				<h1>3</h1>
+			</div>,
+			<div className="item">
+				<h1 className="__mod-2">4</h1>
+			</div>,
+			<div className="item">
+				<h1>5</h1>
 			</div>,
 		],
 	};
 
 	render() {
-		const { autoWidth, items, animationType, infinite, animationDuration } = this.state;
+		const { autoWidth, items, infinite, animationDuration } = this.state;
 
 		return (
 			<div className="app">
 				<h1 className="h1">React Alice Carousel</h1>
-				<button onClick={() => this.setState({ animationType: 'LOLO', animationDuration: 1000 })}>Click</button>
-				<button onClick={() => this.setState({ animationType: 'R0', animationDuration: 400 })}>Click-</button>
 				<AliceCarousel
 					items={items}
 					// paddingLeft={40}
 					// paddingRight={30}
 					infinite={infinite}
 					autoWidth={autoWidth}
+					activeIndex={4}
+					responsive={{
+						0: { items: 1 },
+						1000: { items: 3 },
+					}}
 					// activeIndex={activeIndex}
-					animationType="fadeout"
+					// animationType="fadeout"
 					animationDuration={animationDuration}
 					// responsive={{ 0: { items: 3 }, 400: { items: 1 } }}
 					mouseTracking

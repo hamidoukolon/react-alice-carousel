@@ -218,7 +218,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			const { itemsCount, isAutoPlaying } = this.state;
 			const activeIndex = Utils.getUpdateSlidePositionIndex(this.state.activeIndex, itemsCount);
 			const currState = Utils.calculateInitialState({ ...this.props, activeIndex }, this.stageComponent);
-			const translate3d = Utils.getTranslate3dProperty(activeIndex, currState);
+			const translate3d = Utils.getTranslate3dProperty(currState.activeIndex, currState);
 			const nextState = { ...currState, translate3d, isAutoPlaying };
 
 			Utils.animate(this.stageComponent, { position: -translate3d });
@@ -290,7 +290,11 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			const position = Utils.getSwipeTouchendPosition(this.state, deltaX, this.lastSwipePosition);
 
 			this._handleSlideChange();
-			Utils.animate(this.stageComponent, { position, animationDuration });
+
+			requestAnimationFrame(() => {
+				Utils.animate(this.stageComponent, { position, animationDuration });
+			});
+
 			this._handleBeforeTouchEnd(position);
 		}
 	}
@@ -303,16 +307,14 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 			const activeIndex = Utils.getSwipeTouchendIndex(this.state, position);
 			const translate3d = Utils.getTranslate3dProperty(activeIndex, this.state);
 
-			Utils.animate(this.stageComponent, { position: -translate3d });
+			requestAnimationFrame(() => {
+				Utils.animate(this.stageComponent, { position: -translate3d });
+			});
 
-			if (this.state.activeIndex !== activeIndex) {
-				const transition = Utils.getTransitionProperty();
+			const transition = Utils.getTransitionProperty();
 
-				await this.setState({ activeIndex, translate3d, transition });
-				this._handleSlideChanged();
-			} else {
-				this.isAnimationDisabled = false;
-			}
+			await this.setState({ activeIndex, translate3d, transition });
+			this._handleSlideChanged();
 		}, animationDuration);
 	}
 

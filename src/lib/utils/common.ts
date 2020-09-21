@@ -29,7 +29,7 @@ export const getItemsInSlide = (itemsCount: number, props: Props) => {
 		const configKeys = Object.keys(responsive);
 
 		if (configKeys.length) {
-			if (typeof window !== 'object') {
+			if (typeof window === 'object') {
 				configKeys.forEach((key) => {
 					if (Number(key) < window.innerWidth) {
 						itemsInSlide = Math.min(responsive[key].items, itemsCount) || itemsInSlide;
@@ -49,7 +49,9 @@ export const calculateInitialState = (props: Partial<Props>, el): State => {
 	const itemsCount = Utils.getItemsCount(props);
 	const itemsOffset = Utils.getItemsOffset(props);
 	const itemsInSlide = getItemsInSlide(itemsCount, props);
-	const activeIndex = Utils.getStartIndex(props.activeIndex, itemsCount);
+	const startIndex = Utils.getStartIndex(props.activeIndex, itemsCount);
+	const dotsLength = Utils.getDotsNavigationLength(itemsCount, itemsInSlide, autoWidth);
+	const activeIndex = Math.min(startIndex, dotsLength);
 	const { width: stageWidth } = Utils.getElementDimensions(el);
 
 	if (autoWidth) {
