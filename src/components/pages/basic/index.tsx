@@ -5,7 +5,14 @@ import '../../../lib/scss/alice-carousel.scss';
 const BasicPage = () => {
 	return (
 		<section className="p-basic">
-			<Gallery mouseTracking>
+			<Gallery
+				mouseTracking
+				responsive={{
+					0: { items: 1 },
+					568: { items: 2 },
+					1024: { items: 3 },
+				}}
+			>
 				<div className="item">
 					<h1 className="__mod">1</h1>
 				</div>

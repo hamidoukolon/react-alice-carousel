@@ -36,7 +36,7 @@ export default class App extends React.PureComponent<AppProps> {
 			<div className="app">
 				<Header />
 				<Navigation onclick={this.setActivePage} scheme={scheme} />
-				<main className="s-main">{getPageComponent(pageID, scheme)}</main>
+				<main className="s-main">{getPageComponent(pageID)}</main>
 			</div>
 		);
 	}

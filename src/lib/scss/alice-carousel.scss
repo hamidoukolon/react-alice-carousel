@@ -1,11 +1,12 @@
 @import 'fade-animation';
 
-$clr-base: #e0e4fb !default;
-$clr-blue: #465798 !default;
-$clr-darkred: darkred !default;
+$clr-light: #e0e4fb !default;
+$clr-base: #465798 !default;
+$clr-accent: darkred !default;
 
-$transition-time: 0.3s !default;
-$play-btn-color: $clr-blue !default;
+$transition-time: 0.4s !default;
+
+$play-btn-color: $clr-base !default;
 $play-btn-size: 32px !default;
 
 .alice-carousel {
@@ -97,9 +98,9 @@ $play-btn-size: 32px !default;
   padding: 5px;
   margin: 0;
 
-  color: $clr-blue;
+  color: $clr-base;
   &:hover {
-    color: $clr-darkred;
+    color: $clr-accent;
   }
   &.__inactive {
     opacity: 0.4;
@@ -195,7 +196,7 @@ $play-btn-size: 32px !default;
     cursor: pointer;
 
     border-radius: 50%;
-    background-color: $clr-base;
+    background-color: $clr-light;
 
     &:hover,
     &.__active {
@@ -213,9 +214,9 @@ $play-btn-size: 32px !default;
 
   padding: 5px 10px;
 
-  color: $clr-blue;
+  color: $clr-base;
   border-radius: 5px;
-  background-color: rgba($clr-base, 0.6);
+  background-color: rgba($clr-light, 0.6);
   &-item {
     vertical-align: middle;
 
