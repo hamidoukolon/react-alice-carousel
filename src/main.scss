@@ -12,6 +12,16 @@ html {
 .app {
 	width: 100%;
 	margin: auto;
+
+	.title {
+		color: rgba($color-dark, 1);
+		font-weight: 300;
+		font-style: italic;
+		span {
+			text-transform: capitalize;
+		}
+	}
+
 }
 
 .s-main {

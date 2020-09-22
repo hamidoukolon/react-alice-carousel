@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from './header';
-import Navigation from './navigation';
+// import Navigation from './navigation';
 import getPageComponent from './pages';
 import scheme from './scheme';
 import '../main.scss';
@@ -35,8 +35,13 @@ export default class App extends React.PureComponent<AppProps> {
 		return (
 			<div className="app">
 				<Header />
-				<Navigation onclick={this.setActivePage} scheme={scheme} />
-				<main className="s-main">{getPageComponent(pageID)}</main>
+				{/*<Navigation onclick={this.setActivePage} scheme={scheme} />*/}
+				<main className="s-main">
+					<h2 className="title">
+						<span>{pageID}</span> example
+					</h2>
+					{getPageComponent(pageID)}
+				</main>
 			</div>
 		);
 	}

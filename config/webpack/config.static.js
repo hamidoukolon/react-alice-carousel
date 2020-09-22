@@ -7,7 +7,7 @@ const filename = '[name].[hash:4]';
 module.exports = {
 	entry: ['./src/index.tsx'],
 	output: {
-		path: resolve(__dirname, '../../'),
+		path: resolve(__dirname, '../../', 'static'),
 		filename: `${filename}.js`,
 		publicPath: '/',
 	},

@@ -16,7 +16,9 @@
 		height: 100%;
 		margin: 0;
 		text-align: center;
-		background-color: $color-dark;
+		user-select: none;
+		color: $color-light;
+		background-color: rgba($color-dark, 0.3);
 		&:before {
 			content: '';
 			height: 100%;

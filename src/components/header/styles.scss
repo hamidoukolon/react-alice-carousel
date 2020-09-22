@@ -1,7 +1,7 @@
 @import "../../common";
 
 .header {
-  background-color: darken($color-base, 20%);
+  background-color: $color-dark-lighten;
   &-row {
     @include container;
     display: flex;
@@ -19,7 +19,7 @@
   display: inline-block;
 
   &-badge {
-    color: $color-dark;
+    color: $color-light;
     font-size: 1rem;
   }
 }
