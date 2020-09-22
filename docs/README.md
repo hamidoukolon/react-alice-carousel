@@ -1,6 +1,10 @@
 # Documentation
 
 ## Options
+
+`activeIndex` | Number, default: `0` | Set carousel at the specified position.
+`animationDuration` | Number, default `400` | Set duration of animation.
+
 - `activeIndex` : Number, default `0` - Set carousel at the specified position.
 - `animationDuration`: Number, default `400` - Set duration of animation.
 - `animationEasingFunction`: String, [Function](https://developer.mozilla.org/ru/docs/Web/CSS/animation-timing-function), default `ease` - Property sets how an animation progresses through the duration of each cycle.
