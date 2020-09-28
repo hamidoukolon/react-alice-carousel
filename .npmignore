@@ -32,6 +32,7 @@ jspm_packages
 
 # Optional npm cache directory
 .npm
+.DS_Store
 
 # Optional REPL history
 .node_repl_history
@@ -47,13 +48,15 @@ jspm_packages
 .npmrc
 .prettierrc
 .travis.yml
-.DS_Store
 package-lock.json
+jestconfig.json
+tsconfig.json
 
 # Static files
 config
-static
-tests
+coverage
+docs
 public
 src
-docs
+static
+tests
