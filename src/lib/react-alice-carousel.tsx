@@ -10,7 +10,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	private autoPlayTimeoutId: undefined | number;
 	private isAnimationDisabled: boolean;
 	private isHovered: boolean;
-	private isTouchMoveProcess: boolean;
+	private isTouchMoveProcessStarted: boolean;
 	private hasUserAction: boolean;
 	private lastSwipePosition: undefined | number;
 	private RootElement: null | undefined;
@@ -57,7 +57,7 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 		this.isHovered = false;
 		this.isAnimationDisabled = false;
-		this.isTouchMoveProcess = false;
+		this.isTouchMoveProcessStarted = false;
 		this.hasUserAction = false;
 		this.lastSwipePosition = undefined;
 		this.RootElement = undefined;
@@ -238,20 +238,21 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 
 		this.hasUserAction = true;
 
-		if (this.isAnimationDisabled || (!this.isTouchMoveProcess && absX < Number(swipeDelta))) {
+		if (this.isAnimationDisabled || (!this.isTouchMoveProcessStarted && absX < Number(swipeDelta))) {
 			return;
 		}
 
-		if (!this.isTouchMoveProcess) {
+		if (!this.isTouchMoveProcessStarted) {
 			this._cancelTimeoutAnimations();
+			this.isTouchMoveProcessStarted = true;
 		}
 
-		this.isTouchMoveProcess = true;
 		let position = Utils.getTouchmoveTranslatePosition(deltaX, translate3d);
 		const { swipeLimitMin, swipeLimitMax } = this.state;
 
 		if (infinite === false) {
 			if (position > swipeLimitMin || -swipeLimitMax > position) {
+				this.lastSwipePosition = position > 0 ? swipeLimitMin : swipeLimitMax;
 				return;
 			}
 
@@ -285,21 +286,18 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 	}
 
 	_handleTouchend(e, { deltaX }: EventData) {
-		if (this.isTouchMoveProcess) {
-			this.isTouchMoveProcess = false;
+		if (this.isTouchMoveProcessStarted) {
 			this.isAnimationDisabled = true;
+			this.isTouchMoveProcessStarted = false;
 
 			const { animationDuration } = this.state;
 			const { animationEasingFunction } = this.props;
 			const position = Utils.getSwipeTouchendPosition(this.state, deltaX, this.lastSwipePosition);
 
 			this._handleSlideChange();
+			Utils.animate(this.stageComponent, { position, animationDuration, animationEasingFunction });
 
-			requestAnimationFrame(() => {
-				Utils.animate(this.stageComponent, { position, animationDuration, animationEasingFunction });
-			});
-
-			return this._handleBeforeTouchEnd(position);
+			this._handleBeforeTouchEnd(position);
 		}
 	}
 
@@ -308,12 +306,10 @@ class AliceCarousel extends React.PureComponent<Props, State> {
 		const { animationDuration } = this.state;
 
 		this.touchEndTimeoutId = setTimeout(async () => {
-			const activeIndex = Utils.getSwipeTouchendIndex(this.state, position);
+			const activeIndex = Utils.getSwipeTouchendIndex(position, this.state);
 			const translate3d = Utils.getTranslate3dProperty(activeIndex, this.state);
 
-			requestAnimationFrame(() => {
-				Utils.animate(this.stageComponent, { position: -translate3d });
-			});
+			Utils.animate(this.stageComponent, { position: -translate3d });
 
 			const transition = Utils.getTransitionProperty();
 			await this.setState({ activeIndex, translate3d, transition });

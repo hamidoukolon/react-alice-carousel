@@ -78,7 +78,7 @@ export const getSwipeTransformationCursor = (
 	return getIsLeftDirection(deltaX) ? cursor : cursor - 1;
 };
 
-export const getSwipeTouchendPosition = (state: State, deltaX = 0, swipePosition = 0) => {
+export const getSwipeTouchendPosition = (state: State, deltaX: number, swipePosition = 0) => {
 	const { infinite, autoWidth, isStageContentPartial, swipeAllowedPositionMax, transformationSet } = state;
 	const cursor = getSwipeTransformationCursor(transformationSet, swipePosition, deltaX);
 	const { position } = getTransformationSetItem(cursor, transformationSet);
@@ -96,7 +96,7 @@ export const getSwipeTouchendPosition = (state: State, deltaX = 0, swipePosition
 	return -position;
 };
 
-export const getSwipeTouchendIndex = (state: State, position = 0) => {
+export const getSwipeTouchendIndex = (position, state: State) => {
 	const { transformationSet, itemsInSlide, itemsOffset, itemsCount, infinite } = state;
 	const index = getTransformationItemIndex(transformationSet, position);
 

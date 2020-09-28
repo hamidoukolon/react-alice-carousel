@@ -12,6 +12,7 @@ const BasicPage = () => {
 					568: { items: 2 },
 					1024: { items: 3 },
 				}}
+				animationDuration={1000}
 			>
 				<div className="item">
 					<h1 className="__mod">1</h1>
